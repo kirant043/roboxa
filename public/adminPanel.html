@@ -1,0 +1,678 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Roboxa::</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bs/bootstrap.min.css" />
+    <link href="js/ALightBox.css" type="text/css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/custom2.css" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.15/lodash.min.js"></script>
+<script src="https://momentjs.com/static/js/global.js"></script>
+    <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
+
+
+    <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script src="js/FileSaver.min.js"></script>
+    <script src="js/jquery.multiselect.js"></script>
+    <script src="js/jquery.qrcode.min.js"></script>
+<script src="https://www.google.com/jsapi"></script>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.19.0.min.js"></script>
+
+    <style type="text/css">
+        .main-container .sidebar {
+    background-color: #173b52;
+        }
+        .main-container .nav-pills .nav-link {
+            color: #fff;
+        }
+        .main-container .nav-pills .nav-link.active {
+            background-color: #d2d7d8;
+            color: #173b52;
+        }
+        .hdr-row {
+            background-color: #d2d7d8;
+        }
+        .accordionCall .card {
+            background: #f2f2f2;
+        }
+        .accordionCall .card-header {
+            background: #f2f2f2;
+            padding: 8px 5px;
+        }
+        #reciveCallLink,#outgoingCallLink {
+       /*     border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+            padding: 15px;*/
+        }
+        .main-container .call-details-row .nav-pills .nav-link {
+            height: 100%;
+            background :#f2f2f2;
+            color: #173b52;
+        }
+        .call-details-row .numbers {
+            padding-bottom: 15px;
+        }
+        .delete-modal-text {
+            color:#173b52;
+        }
+        .custome-multi-select {
+            max-height: 125px;
+            border-radius: 3px;
+            border: 1px solid #ced4da;
+            overflow: auto;
+        }
+        
+        #myOverlay {
+            position: absolute;
+            height: 100%;
+            width: 100%;
+        }
+
+        #myOverlay {
+            background: black;
+            opacity: .7;
+            z-index: 2;
+            display: none;
+        }
+
+        #loadingGIF {
+            position: absolute;
+            top: 40%;
+            left: 45%;
+            z-index: 3;
+            display: none;
+        }
+
+        .loaderroboxa {
+            border: 16px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 16px solid #173b52;
+            border-right: 16px solid white;
+            border-bottom: 16px solid #173b52;
+            border-left: 16px solid white;
+            width: 120px;
+            height: 120px;
+            -webkit-animation: spin 2s linear infinite;
+            animation: spin 2s linear infinite;
+        }
+
+        @-webkit-keyframes spin {
+            0% {
+                -webkit-transform: rotate(0deg);
+            }
+
+            100% {
+                -webkit-transform: rotate(360deg);
+            }
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        
+        .btn-primary {
+            background: #173b52;
+        }
+
+        .btn-info {
+            background: transparent;
+            border: 1px solid rgb(64, 64, 65);;
+            color: rgb(64, 64, 65);;
+        }
+
+        .btn-info:hover {
+            background: #d2d7d8;
+            border: 1px solid #d2d7d8;
+            color: #173b52;
+        }
+
+        .card.userCreateForms {
+            /*max-width: 800px;*/
+            margin: auto;
+        }
+
+        .modal-header .close {
+            margin-right: 0rem;
+        }
+        
+        .dropdown-toggle::after {
+            position: absolute;
+            top: 1em;
+            right: 0.5rem;
+        }
+        #createSupervisorForm input:required,
+        #createWorkerForm input:required {
+            box-shadow:none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="myOverlay"></div>
+    <div id="loadingGIF">
+        <div class="loaderroboxa"></div>
+    </div>
+
+
+    <!--Modal Call-->
+    <div class="modal fade" id="deleteuser" tabindex="-1" role="dialog" aria-labelledby="deleteuser" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="delete-modal-text">
+                        <span class="forUserType">Deleting this Expert <br />will also delete associated Technicians !</span>
+<span class="forUserType2">Delete the Technicians !</span>
+                    </div>
+                </div>
+                <div class="modal-footer" style="justify-content: center;">
+                    <button type="button" class="btn btn-danger proceedDelete" style="min-width:100px;">OK</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" aria-label="Close" style="min-width:100px;">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="viewuser" tabindex="-1" role="dialog" aria-labelledby="viewuser" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    View Details
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="right:1em;">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="edituser" tabindex="-1" role="dialog" aria-labelledby="edituser" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+            <form id="editUserForm" name="editUserForm" >
+                <div class="modal-header">
+                    Edit Details
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="right:1em;">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary mx-auto">Update</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="calbusyuser" tabindex="-1" role="dialog" aria-labelledby="calbusyuser-info" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+
+                <div class="modal-body">
+                    <div class="delete-modal-text">
+                        <span class="forUserType">Expert</span><br />
+                        <span>Account <span class="modal-msg-text">Created</span> Successfuly</span>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary mx-auto" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="alertupload" tabindex="-1" role="dialog" aria-labelledby="alertupload" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+
+                <div class="modal-body">
+                    <div class="delete-modal-text">
+                        Something went wrong please try again.
+
+                        <div class="delete-modal-btns-row">
+                            <button type="button" class="btn btn-success btn-lg" data-dismiss="modal">OK</button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-light nav-top-con navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="tab-lt-nav-icon hide-for-desktop" onclick="myFunction()">
+                    &nbsp;
+                </a>
+                <a class="navbar-brand" onclick="roboxaiconrefresh()">Roboxa</a>
+                <span class="navbar-brand-txt">
+                    <!-- <span>|</span>ADMIN PANEL -->
+                </span>
+            </div>
+            <div class="hdr-top-right">
+                <div class="nav-item top-sv-txt">
+                    Admin
+                    <span>|</span>
+                </div>
+                <div class="dropdown">
+                    <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false"></button>
+                    <div class="dropdown-menu" style="padding: 0px;" aria-labelledby="dropdownMenuButton">
+                        <!-- <a class="dropdown-item" href="#">Profile</a>
+                        <a class="dropdown-item" href="#">Setting</a> -->
+                        <a class="dropdown-item" onclick="logout()">Logout</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </nav>
+
+    <div class="container-fluid main-container">
+        <div class="row">
+            <div class="nav flex-column nav-pills sidebar" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                   <a class="nav-link active" id="v-pills-dash-tab" data-toggle="pill" href="#v-pills-dash" role="tab"
+                    aria-controls="v-pills-dash" aria-selected="true">
+                    <!-- <span class="box">
+                        <img src="images/users_list.png" alt="" />
+                    </span> -->Dashboard</a>
+
+                <a class="nav-link " id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab"
+                    aria-controls="v-pills-home" aria-selected="true">
+                    <!-- <span class="box">
+                        <img src="images/users_list.png" alt="" />
+                    </span> -->View Users</a>
+                <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab"
+                    aria-controls="v-pills-profile" aria-selected="false">
+                    <!-- <span class="box">
+                        <img src="images/call.png" alt="" />
+                    </span> -->Expert</a>
+                <a class="nav-link" id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-messages" role="tab"
+                    aria-controls="v-pills-messages" aria-selected="false">
+                    <!-- <span class="box">
+                        <img src="images/document.png" alt="" />
+                    </span> -->Technician</a>
+            </div>
+            <div class="tab-content main-container--text" id="v-pills-tabContent">
+                  <div class="tab-pane fade show active" id="v-pills-dash" role="tabpanel" aria-labelledby="v-pills-dash-tab">
+
+              <div class="panel panel-default">
+    <div class="panel-heading" style="background: #173b52;
+
+padding: 6px;
+
+color: white;
+
+font-size: 16px;">Graph chart</div>
+    <div class="panel-body">
+
+     <div class="row">
+  <div class="col-sm-3">
+<br>
+    <div class="panel panel-default">
+      <div class="panel-heading" style="background: #718189;
+
+padding: 3px;
+
+color: white;
+
+font-size: 16px;
+
+padding-left: 8px;">All calls</div>
+      <div class="panel-body" style="border: 1px solid #173b52;"><div id="chart_divexpert"></div>
+  </div>
+    </div></div>
+  <div class="col-sm-9" style="border-left: 3px solid #173b52;">
+    <br>
+   <label class="radio-inline" style="padding-right: 10px;"><input style="margin-right: 4px;" onclick="createtimewisegraph('byDay','Day')" type="radio" name="optradio" checked>Daily</label>
+<label class="radio-inline" style="padding-right: 10px;"><input style="margin-right: 4px;"  onclick="createtimewisegraph('forWeek','Weeks')" type="radio" name="optradio">Weekly</label>
+<label class="radio-inline" style="padding-right: 10px;"><input style="margin-right: 4px;"  onclick="createtimewisegraph('forMonth','Months')" type="radio" name="optradio">Monthly</label> 
+ <div class="form-group" style="float: right;
+
+margin-top: -23px;">
+      <label for="sel1">Select Expert</label>
+      <select class="form-control" id="expertoption">
+       
+      </select>
+
+    </div>
+
+
+<div class="row" style="margin-top: 37px;">
+<div class="col-sm-4" >
+     <div class="panel panel-default">
+      <div class="panel-heading" style="background: #718189;
+
+padding: 3px;
+
+color: white;
+
+font-size: 16px;
+
+padding-left: 8px;">Pie chart</div>
+      <div class="panel-body" style="border: 1px solid #173b52;"><div id="chart_div"></div>
+  </div>
+    </div>
+    
+</div>
+<div class="col-sm-8" >
+     <div class="panel panel-default">
+      <div class="panel-heading" style="background: #718189;
+
+padding: 3px;
+
+color: white;
+
+font-size: 16px;
+
+padding-left: 8px;">Bar chart</div>
+      <div class="panel-body" style="border: 1px solid #173b52;"><div id="chart_div22"></div>
+  </div>
+    </div>
+
+
+</div>
+
+</div>
+<br>
+<div class="row">
+<div class="col-sm-12" >
+     <div class="panel panel-default">
+      <div class="panel-heading" style="background: #718189;
+
+padding: 3px;
+
+color: white;
+
+font-size: 16px;
+
+padding-left: 8px;">Line chart</div>
+      <div class="panel-body" style="border: 1px solid #173b52;"><div id="chart_div2"></div>
+  </div>
+    </div>
+    
+</div>
+
+</div>
+</div>
+
+
+
+<!-- <center><div id="chart_div2"></div> </center> -->
+ 
+</div> 
+</div>
+  </div>
+
+                </div>
+
+                <div class="tab-pane fade show " id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+
+                    <div id="call" class="container-fluid tab-pane fade p-0 active show">
+                        <div class="tabsMenus call-details-row" style="background:unset;border:unset;border-bottom:1px solid #173b52;">
+                            <ul class="nav nav-pills" role="tablist">
+                                <li class="nav-item col col-3">
+                                    <a id="reciveCallLink" class="nav-link active show" data-toggle="pill" href="#receivedCall">
+                                        <div id="reciveCallCount">
+                                            <span class="numbers"><span class="digits"></span> | Expert</span>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="nav-item col col-3">
+                                    <a id="outgoingCallLink" class="nav-link" data-toggle="pill" href="#outgoingCall">
+                                        <div id="outgoingCallCount">
+                                            <span class="numbers"><span class="digits"></span> |  Technician</span>
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="tab-content">
+                            <div id="receivedCall" class="container-fluid tab-pane p-0 active show">
+
+
+                                <div class="data-text-con">
+                                    <div id="accordion" class="accordionCall">
+                                        <div class="hdr-row">
+                                            <div class="row">
+                                                <div class="col-4 col-sm-3 ellipsis-text">
+                                                    <span>Expert's Name</span>
+                                                </div>
+                                                <div class="col-3 col-sm-2 ellipsis-text">
+                                                    <span>Emp ID</span>
+                                                </div>
+                                                <div class="col-3 col-sm-3 ellipsis-text">
+                                                    <span>Location</span>
+                                                </div>
+                                                <div class="col-2 col-sm-2 hide-on-mobile ellipsis-text">
+                                                    <span>Email</span>
+                                                </div>
+
+                                                <div class="col-2 col-sm-2 text-center">Action</div>
+                                            </div>
+                                        </div>
+                                        <div id="reciveCalls"></div>
+                                    </div>
+                                </div>
+
+    </div>
+              <div id="outgoingCall" class="container-fluid tab-pane p-0 fade ">
+                                <!-- <h3 class="h3 heading-txt">Workers List</h3> -->
+                                <div class="data-text-con">
+                                    <div id="accordion" class="accordionCall">
+                                        <div class="hdr-row">
+                                            <div class="row">
+                                                <div class="col-4 col-sm-3 ellipsis-text">
+                                                    <span>Technician's Name</span>
+                                                </div>
+                                                <div class="col-3 col-sm-2 ellipsis-text">
+                                                    <span>Glass ID</span>
+                                                </div>
+                                                <div class="col-3 col-sm-3 ellipsis-text">
+                                                    <span>Location</span>
+                                                </div>
+                                                <div class="col-2 col-sm-2 hide-on-mobile ellipsis-text">
+                                                    <span>Email </span>
+                                                </div>
+                                                <div class="col-2 col-sm-2 text-center">Action</div>
+                                            </div>
+                                        </div>
+                                        <div id="outgoingCalls"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!--Tab Workers List End-->
+                <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+
+                    <h3 class="h3 heading-txt">Add New Expert</h3>
+                    <form id="createSupervisorForm" name="createSupervisorForm" action="/user/supervisor" method="POST">
+                        <input type="hidden" name="access_role" />
+                        <div class="card userCreateForms">
+                            <div class="card-body">
+                                <!-- Name(First Name, Last Name) username, ID, password, email ID, Company, location -->
+                                <div class="form-row">
+                                    <div class="form-group col-md-4">
+                                        <label for="super_fname">First Name*</label>
+                                        <input type="text" class="form-control" name="f_name" id="super_fname"
+                                            placeholder="First Name" required>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="super_empID">ID*</label>
+                                        <input type="text" class="form-control" name="emp_id" id="super_empID"
+                                            placeholder="ID" required>
+                                        <div class="invalid-feedback" style="display:none;">
+                                            Emp ID is being taken.
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="super_location">Location*</label>
+                                        <input type="text" class="form-control" id="super_location" name="location"
+                                            placeholder="Location" required>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-md-8">
+                                        <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="super_lname">Last Name</label>
+                                        <input type="text" class="form-control" name="l_name" id="super_lname"
+                                            placeholder="Last Name">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="addWorkerFromList">Select Technician*</label>
+                                        <select multiple class="form-control" id="addWorkerFromList" name="worker_list" required>
+                                        </select>
+                                    </div>
+                                    <!-- <div class="form-group col-md-6">
+                                        <label for="super_username">Username*</label>
+                                        <input type="text" class="form-control" name="user_name" id="super_username"
+                                            placeholder="Username" required>
+                                    </div> -->
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="super_email">Email*</label>
+                                        <input type="email" class="form-control" name="email" id="super_email"
+                                            placeholder="Email" required>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="super_password">Password*</label>
+                                        <input type="password" class="form-control" name="password" id="super_password"
+                                            placeholder="Password" required>
+                                    </div>
+                                </div>
+                                    </div>
+                                </div>
+                                <!-- <div class="form-row">
+                                    <div class="form-group col-md-4">
+                                        <label for="super_company">Company</label>
+                                        <input type="text" class="form-control" name="company" id="super_company"
+                                            placeholder="Company" required>
+                                    </div>
+                                    
+                                </div> -->
+                                <div class="form-row float-right">
+                                    <div class="p-2">
+                                        <button type="submit" class="btn btn-success">Create Expert</button>
+                                        <button type="reset" class="btn btn-light ">Clear Fields</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+                <!--Tab Call End-->
+
+                <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">
+
+                    <h3 class="h3 heading-txt">Add New Technician</h3>
+                    <form id="createWorkerForm" name="createWorkerForm" action="/user/worker" method="POST">
+                        <input type="hidden" name="access_role" />
+                        <div class="card userCreateForms">
+                            <div class="card-body">
+                                <!-- Name(First Name, Last Name), username, email ID, Glass ID, Location -->
+                                <div class="form-row">
+                                    <div class="form-group col-md-4">
+                                        <label for="worker_fname">First Name*</label>
+                                        <input type="text" class="form-control" name="f_name" id="worker_fname"
+                                            placeholder="First Name" required>
+                                    </div>
+                                    <!-- <div class="form-group col-md-4">
+                                        <label for="worker_username">Username*</label>
+                                        <input type="text" class="form-control" name="user_name" id="worker_username"
+                                            placeholder="Username" required>
+                                    </div> -->
+                                    <div class="form-group col-md-4">
+                                        <label for="worker_qrcode">QR Code*</label>
+                                        <input type="text" class="form-control" name="qr_code" id="worker_qrcode" placeholder="Password"  required>
+                                        <div class="invalid-feedback" style="display:none;">
+                                            QR Code is being taken.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-4">
+                                        <label for="worker_lname">Last Name</label>
+                                        <input type="text" class="form-control" name="l_name" id="worker_lname"
+                                            placeholder="Last Name">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="worker_glassId">Glass ID*</label>
+                                        <input type="text" class="form-control" id="worker_glassId"
+                                            name="glass_id" placeholder="ID"  required>
+                                    </div>
+                                    
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-4">
+                                        <label for="worker_email">Email*</label>
+                                        <input type="email" class="form-control" name="email" id="worker_email"
+                                            placeholder="Email" required>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="worker_location">Location*</label>
+                                        <input type="text" class="form-control" id="worker_location" name="location"
+                                            placeholder="Location"  required>
+                                    </div>
+                                </div>
+                                <center>
+                             <div class="form-group col-md-4">
+                                        <div class="mt-4 p-2">
+                                            <button type="submit" class="btn btn-success">Create Technician</button>
+                                            <button type="reset" class="btn btn-light ">Clear Fields</button>
+                                        </div>
+                                    </div>
+                                    </center>
+                                
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div>
+                <div style="background:url('images/reconnecting_user.gif');">
+                </div>
+            </div>
+
+
+            <!-- Optional JavaScript -->
+            <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+            <script src="js/adminPage.js"></script>
+            <!-- <script src="js/ALightBox.js"></script> -->
+            <script src="js/CookiesHelper.js" crossorigin="anonymous"></script>
+            <script src="js/bs/popper.min.js"></script>
+
+
+            <script src="js/bs/bootstrap.min.js" crossorigin="anonymous"></script>
+            <!-- <script src="js/CallConnection.js" crossorigin="anonymous"></script> -->
+            <!-- <script src="js/WorkerList.js?vs=1.0016" crossorigin="anonymous"></script> -->
+</body>
+
+</html>

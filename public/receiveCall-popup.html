@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Roboxa::</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bs/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/custom.css" />
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+    <!--Modal Receive Call-->
+
+    <!-- Modal -->
+    <div class="modal fade show" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+        aria-hidden="true">
+
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content call-modal-bg bdr-radius-20">
+
+                <div class="modal-body">
+                    <div class="popup-calling-txt">
+                        <div class="call-heading">John Calling...</div>
+                        <div class="sub-heaing">
+
+                            Glass ID AD23243
+                            <span>|</span>Singapore
+                        </div>
+                        <div class="calling-btns-row">
+                            <button type="button" class="btn btn-success bdr-radius-20 btn-lg">Accept</button>
+                            <span>|</span>
+                            <button type="button" class="btn btn-danger bdr-radius-20 btn-lg" data-dismiss="modal">Cancel</button>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!--//MOdal Receive Call-->
+
+
+
+
+
+
+    <nav class="navbar navbar-light nav-top-con navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="tab-lt-nav-icon hide-for-desktop" onclick="myFunction()">
+                    &nbsp;
+                </a>
+                <a class="navbar-brand" href="#">Roboxa</a>
+                <span class="navbar-brand-txt">
+                    <span>|</span>REMOTE ASSISTANCE</span>
+            </div>
+            <div class="hdr-top-right">
+                <div class="nav-item top-sv-txt">Supervisor
+                    <span>|</span>
+                </div>
+                <div class="dropdown">
+                    <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false">
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="#">Profile</a>
+                        <a class="dropdown-item" href="#">Setting</a>
+                        <a class="dropdown-item" href="#">Logout</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </nav>
+
+    <div class="container-fluid main-container">
+        <div class="row">
+            <div class="col-sm-12 pl-0 pr-0">
+                <div class="nav flex-column nav-pills sidebar" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                    <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home"
+                        aria-selected="true">
+                        <span class="box">&nbsp;</span>Workers List</a>
+                    <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile"
+                        aria-selected="false">
+                        <span class="box">&nbsp;</span>Call</a>
+                    <a class="nav-link" id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-messages" role="tab" aria-controls="v-pills-messages"
+                        aria-selected="false">
+                        <span class="box">&nbsp;</span>Documents</a>
+                </div>
+                <div class="tab-content main-container--text" id="v-pills-tabContent">
+                    <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+                        <h3 class="h3 heading-txt">Workers List</h3>
+                        <div class="data-text-con">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th scope="col" class="ellipsis-text">
+                                                <span>Worker's Name</span>
+                                            </th>
+                                            <th scope="col" class="ellipsis-text">
+                                                <span>Email Address</span>
+                                            </th>
+                                            <th scope="col" class="ellipsis-text">
+                                                <span>Glass ID</span>
+                                            </th>
+                                            <th scope="col" class="ellipsis-text hide-on-mobile ">
+                                                <span>Location</span>
+                                            </th>
+                                            <th scope="col" class="ellipsis-text hide-on-mobile">
+                                                <span>Status</span>
+                                            </th>
+                                            <th scope="col">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td scope="row" class="ellipsis-text">
+                                                <span>Morkal</span>
+                                            </td>
+                                            <td class="ellipsis-text">
+                                                <span>morkal.ar@roboxatech.comMark</span>
+                                            </td>
+                                            <td class="ellipsis-text">
+                                                <span>AR456466</span>
+                                            </td>
+                                            <td class="hide-on-mobile ellipsis-text">
+                                                <span>Singapore</span>
+                                            </td>
+                                            <td class="hide-on-mobile ellipsis-text">
+                                                <span>active</span>
+                                            </td>
+                                            <td>
+                                                <button type="button" class="btn btn-success btn-sm">Call</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td scope="row" class="ellipsis-text">
+                                                <span>David Tal</span>
+                                            </td>
+                                            <td class="ellipsis-text">
+                                                <span>david.ar@roboxatech.com</span>
+                                            </td>
+                                            <td class="ellipsis-text">
+                                                <span>MY870789</span>
+                                            </td>
+                                            <td class="hide-on-mobile ellipsis-text">
+                                                <span>Malaysia</span>
+                                            </td>
+                                            <td class="hide-on-mobile ellipsis-text">
+                                                <span>Ideal</span>
+                                            </td>
+                                            <td>
+                                                <button type="button" class="btn btn-success btn-sm">Call</button>
+                                            </td>
+                                        </tr>
+
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#exampleModalCenter">
+                            Recive Call Popup
+                        </button>
+
+
+                    </div>
+                    <!--Tab Workers List End-->
+                    <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+
+                        <div class="call-video-con">
+                            <img src="images/call-bnr-img.jpg" alt="">
+                            <div class="video-overlay-txt">
+                                <div class="top-txt">
+
+                                    <span class="time-duration">00:15</span>
+
+                                    <div class="name-place">John | Glass ID AD23243 | Singapore</div>
+                                </div>
+
+                                <div class="bottom-txt">
+                                    <button type="button" class="btn btn-danger btn-lg bdr-radius-20">End</button>
+                                </div>
+
+                                <div class="right-icons">
+                                    <a href="javascript:;">
+                                        <img src="images/edit-icon.png" alt="">
+                                    </a>
+                                    <a href="javascript:;">
+                                        <img src="images/play-icon.png" alt="">
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="call-details-row">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col active">
+                                        <div class="numbers">08</div>
+                                        Active Call
+                                    </div>
+                                    <div class="col">
+                                        <div class="numbers">06</div>
+                                        Outgoing Call
+                                    </div>
+                                    <div class="col">
+                                        <div class="numbers">04</div>
+                                        Call Reports
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <h3 class="h3 heading-txt">Recent Call</h3>
+                        <div class="data-text-con">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th scope="col" class="ellipsis-text">
+                                                <span>Worker's Name</span>
+                                            </th>
+                                            <th scope="col" class="ellipsis-text">
+                                                <span>Glass ID</span>
+                                            </th>
+                                            <th scope="col" class="ellipsis-text">
+                                                <span>Location</span>
+                                            </th>
+                                            <th scope="col" class="ellipsis-text text-center">
+                                                <span>Call Duration</span>
+                                            </th>
+                                            <th scope="col" class="text-center">Details</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td scope="row" class="ellipsis-text">
+                                                <span>Morkal</span>
+                                            </td>
+                                            <td class="ellipsis-text">
+                                                <span>AR456466</span>
+                                            </td>
+                                            <td class="ellipsis-text">
+                                                <span>Singapore</span>
+                                            </td>
+                                            <td class="ellipsis-text text-center">
+                                                <span>01:30 hrs</span>
+                                            </td>
+                                            <td class="text-center">
+                                                <a href="javascript">Show</a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td scope="row" class="ellipsis-text">
+                                                <span>David Tal</span>
+                                            </td>
+                                            <td class="ellipsis-text">
+                                                <span>MY870789</span>
+                                            </td>
+                                            <td class="ellipsis-text">
+                                                <span>Malaysia</span>
+                                            </td>
+                                            <td class="ellipsis-text text-center">
+                                                <span>20:30 hrs</span>
+                                            </td>
+                                            <td class="text-center">
+                                                <a href="javascript">Show</a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td scope="row" class="ellipsis-text">
+                                                <span>Jimmy Nicolas</span>
+                                            </td>
+
+                                            <td class="ellipsis-text">
+                                                <span>CA876765</span>
+                                            </td>
+                                            <td class="ellipsis-text">
+                                                <span>Canada</span>
+                                            </td>
+                                            <td class="ellipsis-text text-center">
+                                                <span>20:30 hrs</span>
+                                            </td>
+                                            <td class="text-center">
+                                                <a href="javascript">Show</a>
+                                            </td>
+                                        </tr>
+                                        <tr class="calls-ftr-data">
+                                            <td scope="row" colspan="5">
+                                                <div class="rc-bottom-data">
+                                                    <div class="data-lt">
+                                                        <div class="data-row">
+                                                            <div class="lt-data-label">Job ID</div>
+                                                            <div class="data-label-txt">
+                                                                <span>:</span> MY870789</div>
+                                                        </div>
+                                                        <div class="data-row">
+                                                            <div class="lt-data-label">Start Call</div>
+                                                            <div class="data-label-txt">
+                                                                <span>:</span> 10:30am</div>
+                                                        </div>
+                                                        <div class="data-row">
+                                                            <div class="lt-data-label">Finish Call</div>
+                                                            <div class="data-label-txt">
+                                                                <span>:</span> 11:30am</div>
+                                                        </div>
+                                                        <div class="data-row">
+                                                            <div class="lt-data-label">Call Duration</div>
+                                                            <div class="data-label-txt">
+                                                                <span>:</span> 01:00 hrs</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="rc-bottom-data-img">
+                                                        <div class="img-1">
+                                                            <img src="images/call-ftr-img1.jpg" alt="">
+                                                            <div class="img-overlay">
+                                                                <div class="zoom-icon">
+                                                                    <a href="javascript:;">
+                                                                        <img src="images/zoom-icon.png" alt="" />
+                                                                    </a>
+                                                                </div>
+                                                                <div class="img-overlay-txt">
+                                                                    <a href="javascript:;">View Evidence</a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="img-2">
+                                                            <img src="images/call-ftr-img2.jpg" alt="">
+                                                            <div class="img-overlay">
+                                                                <div class="zoom-icon">
+                                                                    <a href="javascript:;">
+                                                                        <img src="images/zoom-icon.png" alt="" />
+                                                                    </a>
+                                                                </div>
+                                                                <div class="img-overlay-txt">
+                                                                    <a href="javascript:;">Shared Documents</a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Tab Call End-->
+                    <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">
+                        <div class="data-text-con">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th scope="col" class="ellipsis-text">
+                                                <span>Document Title</span>
+                                            </th>
+                                            <th scope="col" class="ellipsis-text">
+                                                <span>Data</span>
+                                            </th>
+                                            <th scope="col" class="ellipsis-text">
+                                                <span>Date</span>
+                                            </th>
+
+                                            <th scope="col" class="text-center">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td scope="row">
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                                                    <label class="form-check-label" for="exampleCheck1">Aircraft Structural repair</label>
+                                                </div>
+
+                                            </td>
+                                            <td class="ellipsis-text">
+                                                <span>235 kb</span>
+                                            </td>
+                                            <td class="ellipsis-text">
+                                                <span>02/03/2018</span>
+                                            </td>
+                                            <td class="text-center">
+                                                <a href="javascript">
+                                                    <i class="fa fa-trash-o fa-lg"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col pr-0">
+                                    <nav aria-label="Page navigation example">
+                                        <ul class="pagination justify-content-end">
+                                            <li class="page-item disabled">
+                                                <a class="page-link" href="#" tabindex="-1">
+                                                    <i class="fa fa-angle-left fa-lg"></i>
+                                                </a>
+                                            </li>
+                                            <li class="page-item active">
+                                                <a class="page-link" href="#">1</a>
+                                            </li>
+                                            <li class="page-item">
+                                                <a class="page-link" href="#">2</a>
+                                            </li>
+                                            <li class="page-item">
+                                                <a class="page-link" href="#">3</a>
+                                            </li>
+                                            <li class="page-item">
+                                                <a class="page-link" href="#">
+                                                    <i class="fa fa-angle-right fa-lg"></i>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <!--Tab Documents End-->
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="js/jquery-3.2.1.slim.min.js" crossorigin="anonymous"></script>
+    <script src="js/bs/umd/popper.min.js" crossorigin="anonymous"></script>
+    <script src="js/bs/bootstrap.min.js" crossorigin="anonymous"></script>
+    <script>
+        function myFunction() {
+            var x = document.getElementById("v-pills-tab");
+            if (x.style.display === "block") {
+                x.style.display = "none";
+            } else {
+                x.style.display = "block";
+            }
+
+
+        }
+    </script>
+
+
+</body>
+
+</html>
