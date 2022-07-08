@@ -1,4 +1,5 @@
 ﻿'use strict';
+
 var socket;
 var isChannelReady = false;
 var isInitiator = false;
@@ -21,7 +22,6 @@ var pcConfig = {
 
     }]
 };
-
 var callerbusy = false;
 
 var serverconfig = {
@@ -56,7 +56,7 @@ var sdpConstraints = {
 // could prompt for room name:
 // room = prompt('enter room name:');
 
-socket = io("http://localhost:5000");
+socket = io("https://nsbluescope.roboxatech.com");
 
 socket.on('connect', function () {
     console.log("Websocket Client Connected", socket)

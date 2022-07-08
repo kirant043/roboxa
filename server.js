@@ -10,42 +10,7 @@ const { Server } = require("socket.io");
 const config =  require('./config.js');
 const PORT = config.PORT;
 
-var cors = require('cors'); //import cors module
-var whitelist = ['http://localhost:5000', 'localhost', 'https://localhost:5000']; //white list consumers
-var corsOptions = {
-  origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(null, false);
-    }
-  },
-  methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
-  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
-  credentials: true, //Credentials are cookies, authorization headers or TLS client certificates.
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'device-remember-token', 'Access-Control-Allow-Origin', 'Origin', 'Accept']
-};
 
-app.use(cors(corsOptions));
-
-app.use(function (req, res, next) {
-
-  // Website you wish to allow to connect
-  res.setHeader('Access-Control-Allow-Origin', '*');
-
-  // Request methods you wish to allow
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-
-  // Request headers you wish to allow
-  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-
-  // Set to true if you need the website to include cookies in the requests sent
-  // to the API (e.g. in case you use sessions)
-  res.setHeader('Access-Control-Allow-Credentials', true);
-
-  // Pass to next layer of middleware
-  next();
-});
 // mongoose for mongodb
 // set the port
 var database = require("./config/database"); // load the database config
@@ -104,13 +69,10 @@ var server = app.listen(PORT, function(){
   console.log(`${config.NODE_ENV} server listening on port ` + PORT);
 });
 // const server = https.createServer(options, app);
-var io = new Server(server, {
-  cors: {
-    origin: ["*"],
-    allowedHeaders: ["*"],
-    credentials: true
-  }
-});
+var io = new Server(server);
+
+
+("use strict");
 
 io.on("connection", function (socket) {
   console.log("Handshake url", socket.handshake)
