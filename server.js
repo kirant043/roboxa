@@ -46,6 +46,21 @@ app.use(function (req, res, next) {
   // Pass to next layer of middleware
   next();
 });
+function allowCrossDomain(req, res, next) {
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+
+  var origin = req.headers.origin;
+  if (_.contains(app.get('allowed_origins'), origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+
+  if (req.method === 'OPTIONS') {
+    res.send(200);
+  } else {
+    next();
+  }
+}
+app.use(allowCrossDomain);
 // mongoose for mongodb
 // set the port
 var database = require("./config/database"); // load the database config
