@@ -86,12 +86,11 @@ var server = app.listen(PORT, function(){
   console.log(`${config.NODE_ENV} server listening on port ` + PORT);
 });
 // const server = https.createServer(options, app);
-var io = new Server(server);
+var io = new Server(config.SOCKET_PORT);
 
-
-("use strict");
 
 io.on("connection", function (socket) {
+  console.log("Handshake url", socket.handshake)
   // console log user id who connected to the server and room name from socket object
   console.log(socket.rooms)
   console.log('############################')
