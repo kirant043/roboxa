@@ -69,9 +69,7 @@ var server = app.listen(PORT, function(){
   console.log(`${config.NODE_ENV} server listening on port ` + PORT);
 });
 // const server = https.createServer(options, app);
-var io = new Server(server, {
-  secure: true
-});
+var io = new Server(3058);
 
 
 ("use strict");
