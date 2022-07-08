@@ -69,7 +69,7 @@ var server = app.listen(PORT, function(){
   console.log(`${config.NODE_ENV} server listening on port ` + PORT);
 });
 // const server = https.createServer(options, app);
-var io = new Server(config.SOCKET_PORT);
+var io = new Server(3058);
 // var io = new Server(server);
 
 
