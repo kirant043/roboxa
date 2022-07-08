@@ -73,7 +73,8 @@ var io = new Server(server, {
   wsEngine: require("eiows").Server,
   perMessageDeflate: {
       threshold: 32768
-  }
+  },
+  secure: false
 });
 
 
