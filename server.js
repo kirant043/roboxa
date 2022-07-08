@@ -55,14 +55,18 @@ require("./app/routes.js")(app);
 // app.set('host', process.env.HOST || '52.15.113.161'); //'52.15.38.221'
 // listen (start app with node server.js) ======================================
 
-var server = app.listen(PORT, function(){
-	console.log(`${config.NODE_ENV} server listening on port ` + PORT);
-});
+if(config.NODE_ENV === 'development') {
+  var server = app.listen(PORT, function(){
+    console.log(`${config.NODE_ENV} server listening on port ` + PORT);
+  });
+} else {
+  var server = https.createServer(options, app).listen(PORT, function(){
+    console.log(`https ${config.NODE_ENV} server listening on port ` + PORT);
+  });
+}
 // const server = https.createServer(options, app);
 var io = new Server(server);
-// https.createServer(options, app).listen(PORT, function(){
-//   console.log('Express server listening on port ' + PORT);
-// });
+
 
 ("use strict");
 
