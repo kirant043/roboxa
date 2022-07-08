@@ -107,6 +107,8 @@ var server = app.listen(PORT, function(){
 var io = new Server(server, {
   cors: {
     origin: ["*"],
+    allowedHeaders: ["*"],
+    credentials: true
   }
 });
 
