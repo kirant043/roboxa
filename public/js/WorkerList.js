@@ -23,14 +23,14 @@ $(document).ready(function () {
   $("#caldivshow").hide();
   var userId = getParameterByName("user_id");
   setCookie("user_id", userId, 10);
+  var ResToSetUserId = {
+      user_id: getCookie("user_id"),
+  };
+  socket.emit("setUserId", ResToSetUserId);
   FnGetWorkerList();
   FnGetWorkerListByCallHistory();
   getAllnotification();
   FnGetRecentUplodedDoc();
-    var ResToSetUserId = {
-        user_id: getCookie("user_id"),
-    };
-    socket.emit("setUserId", ResToSetUserId);
 
   $("input[id=filedata]").change(function (ev) {
     $("#filenameshow").innerHTML = "";

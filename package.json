@@ -5,11 +5,13 @@
   "main": "server.js",
   "author": "Scotch",
   "scripts": {
-    "start": "node server.js"
+    "start": "export NODE_ENV=production && node server.js",
+    "dev": "export NODE_ENV=development && node server.js"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
     "concurrently": "^7.2.2",
+    "dotenv": "^16.0.1",
     "express": "^4.16.4",
     "fcm-node": "^1.5.1",
     "fs": "0.0.1-security",

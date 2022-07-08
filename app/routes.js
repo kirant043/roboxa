@@ -2,8 +2,9 @@ var dbaa = '';
 var dbcheck = ''
 var MongoClient = require('mongodb').MongoClient;
 var ObjectID = require('mongodb').ObjectID;
-var url = "mongodb://localhost:45628/"
-//var url = "mongodb://3.133.140.120:45628/";
+const config =  require('../config.js');
+
+var url = config.MONGOURL;
 MongoClient.connect(url, (err, database) => {
 
   if (err) return // console.log(err)

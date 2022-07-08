@@ -6,8 +6,9 @@ var http = require("http");
 var https = require("https");
 var request = require("request");
 var FCM = require("fcm-node");
-const PORT = 4028;
 const { Server } = require("socket.io");
+const config =  require('./config.js');
+const PORT = config.PORT;
 
 // mongoose for mongodb
 // set the port
@@ -55,7 +56,7 @@ require("./app/routes.js")(app);
 // listen (start app with node server.js) ======================================
 
 var server = app.listen(PORT, function(){
-	console.log('Express server listening on port ' + PORT);
+	console.log(`${config.NODE_ENV} server listening on port ` + PORT);
 });
 // const server = https.createServer(options, app);
 var io = new Server(server);
@@ -63,9 +64,18 @@ var io = new Server(server);
 //   console.log('Express server listening on port ' + PORT);
 // });
 
+("use strict");
 
 io.on("connection", function (socket) {
-  console.log("Web socket connection successfull", socket);
+  // console log user id who connected to the server and room name from socket object
+  console.log(socket.rooms)
+  console.log('############################')
+  console.log(`userID: ${socket.id}`)
+  console.log(`rooms: ${socket.rooms}`)
+  console.log(`name: ${socket.nsp.name}`)
+  console.log(`connected: ${socket.nsp.connected}`)
+  console.log(`address: ${socket.nsp.address}`)
+  console.log('############################')
   //console.log("Successfully connected");
   // convenience function to log server messages on the client
   function log() {
@@ -77,16 +87,16 @@ io.on("connection", function (socket) {
   socket.on("setUserId", function (args) {
     // Map user to socket id
     offlineuser = [];
-    console.log(args);
+    console.log("setUserId", args);
     // Check if user is already connected
     /*if (Object.values(clients).indexOf(args.user_id) > -1) {
-		var found = Object.keys(clients).filter(function (key) {
-		  return clients[key] === args.user_id;
-		});
-		io.sockets.sockets[found].disconnect();
-		console.log("Disconneted User");
-		// io.sockets.sockets[clients[found]].disconnect();
-	  }*/
+      var found = Object.keys(clients).filter(function (key) {
+        return clients[key] === args.user_id;
+      });
+      io.sockets.sockets[found].disconnect();
+      console.log("Disconneted User");
+      // io.sockets.sockets[clients[found]].disconnect();
+    }*/
     //console.log(JSON.stringify(args));
     console.log("Connected User ------------- " + args.user_id);
     socket.userid = args.user_id;
@@ -101,18 +111,21 @@ io.on("connection", function (socket) {
     io.sockets.emit("connectUser", data);
   });
   /*socket.on("isConnected", function (id, ackFn) {
-	  let otherSocket = io.sockets.clients[id];
-	  ackFn(!!otherSocket && otherSocket.connected);
-	});*/
+    let otherSocket = io.sockets.clients[id];
+    ackFn(!!otherSocket && otherSocket.connected);
+  });*/
   socket.on("disconnect", function () {
     // offlineuser.push(clients[socket.id]);
     //console.log("user " + clients[socket.id] + " disconnected");
+
     // var data3 = {
     //        'offlineuseid': clients[socket.id],
     //        'status':"offline"
     //    };
+
     // socket.broadcast.emit("usergoofflineoncall", clients[socket.id]);
     /*delete clients[socket.id];*/
+    console.log('disconnected')
   });
 
   socket.on("usergoonlineoncall", function (args) {
@@ -411,7 +424,6 @@ io.on("connection", function (socket) {
   });
 
   socket.on("GetOnlineUsers", function () {
-    console.log("GetOnlineUsers");
 
     var connected_user = findUsersConnected("", "");
     //console.log(connected_user);
@@ -420,6 +432,7 @@ io.on("connection", function (socket) {
     };
     //io.sockets.emit('AllConnectedUsers', data);
     //socket.broadcast.emit('GetOnlineUsers', data);
+    console.log("GetOnlineUsers", data);
     io.sockets.emit("GetOnlineUsers", data);
   });
 
@@ -475,10 +488,7 @@ io.on("connection", function (socket) {
     var ifaces = os.networkInterfaces();
     for (var dev in ifaces) {
       ifaces[dev].forEach(function (details) {
-        if (
-          details.family === "IPv4" &&
-          details.address !== "nsbluescope.roboxatech.com"
-        ) {
+        if (details.family === "IPv4" && details.address !== "nsbluescope.roboxatech.com") {
           socket.emit("ipaddr", details.address);
         }
       });
@@ -544,31 +554,39 @@ io.on("connection", function (socket) {
 });
 
 function findUsersConnected(room, namespace) {
-  console.log("findUsersConnected()");
+  console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
 
   var names = [];
-  var ns = io.of("/");
+  var ns = io.of("/").adapter.rooms;
+  console.log("findUsersConnected()", io.of("/").adapter.rooms);
   if (ns) {
-    for (var id in ns.connected) {
-      if (room) {
-        var roomKeys = Object.keys(ns.connected[id].rooms);
-        for (var i in roomKeys) {
-          if (roomKeys[i] == room) {
-            if (ns.connected[id].userid) {
-              names.push(ns.connected[id].userid);
-            } else {
-              names.push(ns.connected[id].id);
-            }
-          }
-        }
-      } else {
-        if (ns.connected[id].userid) {
-          names.push(ns.connected[id].userid);
-        } else {
-          names.push(ns.connected[id].id);
-        }
-      }
-    }
+    ns.forEach((id, key) => {
+      names.push(key);
+    })
+    // for (var id in ns.connected) {
+    //   // if (room) {
+    //   //   var roomKeys = Object.keys(ns.connected[id].rooms);
+    //   //   for (var i in roomKeys) {
+    //   //     if (roomKeys[i] == room) {
+    //   //       if (ns.connected[id].userid) {
+    //   //         names.push(ns.connected[id].userid);
+    //   //       } else {
+    //   //         names.push(ns.connected[id].id);
+    //   //       }
+    //   //     }
+    //   //   }
+    //   // } else {
+    //   // if (ns.connected[id].userid) {
+    //   //   console.log(`userID: ${ns.connected[id].userid}`)
+    //   //   names.push(ns.connected[id].userid);
+    //   // } else {
+    //   //   console.log(`id: ${ns.connected[id].id}`)
+    //   //   names.push(ns.connected[id].id);
+    //   // }
+    //   // }
+    // }
   }
+  console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
   return names.sort();
 }
+
