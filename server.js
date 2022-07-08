@@ -69,7 +69,12 @@ var server = app.listen(PORT, function(){
   console.log(`${config.NODE_ENV} server listening on port ` + PORT);
 });
 // const server = https.createServer(options, app);
-var io = new Server(server);
+var io = new Server(server, {
+  wsEngine: require("eiows").Server,
+  perMessageDeflate: {
+      threshold: 32768
+  }
+});
 
 
 ("use strict");

@@ -13,6 +13,7 @@
     "concurrently": "^7.2.2",
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",
+    "eiows": "^4.1.2",
     "express": "^4.16.4",
     "fcm-node": "^1.5.1",
     "fs": "0.0.1-security",
