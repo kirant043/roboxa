@@ -27,6 +27,10 @@ $(document).ready(function () {
   FnGetWorkerListByCallHistory();
   getAllnotification();
   FnGetRecentUplodedDoc();
+    var ResToSetUserId = {
+        user_id: getCookie("user_id"),
+    };
+    socket.emit("setUserId", ResToSetUserId);
 
   $("input[id=filedata]").change(function (ev) {
     $("#filenameshow").innerHTML = "";
@@ -1325,10 +1329,6 @@ function FnGetRecentUplodedDoc() {
       FnGetDocumentCount();
       modeldocumnetlist(documentdataall);
       FnShowRecentUploadedDoc(documentdataall);
-    //   var ResToSetUserId = {
-    //     user_id: getCookie("user_id"),
-    //   };
-    //   socket.emit("setUserId", ResToSetUserId);
     },
     error: function (xhr, status, error) {},
   });
