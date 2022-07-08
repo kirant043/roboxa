@@ -70,10 +70,6 @@ var server = app.listen(PORT, function(){
 });
 // const server = https.createServer(options, app);
 var io = new Server(server, {
-  wsEngine: require("eiows").Server,
-  perMessageDeflate: {
-      threshold: 32768
-  },
   secure: false
 });
 
