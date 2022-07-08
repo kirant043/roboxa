@@ -57,6 +57,7 @@ var sdpConstraints = {
 // room = prompt('enter room name:');
 
 socket = io("https://nsbluescope.roboxatech.com:443");
+//socket = io("http://localhost:5000");
 
 socket.on('connect', function () {
     console.log("Websocket Client Connected", socket)

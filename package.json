@@ -6,7 +6,7 @@
   "author": "Scotch",
   "scripts": {
     "start": "export NODE_ENV=production && node server.js",
-    "dev": "export NODE_ENV=development && node server.js"
+    "dev": "export NODE_ENV=development && nodemon server.js"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
@@ -22,6 +22,7 @@
     "mongodb": "^3.0.7",
     "mongoose": "~3.6.2",
     "morgan": "^1.9.1",
+    "nodemon": "^2.0.19",
     "npm": "^5.8.0",
     "request": "^2.87.0",
     "socket.io": "^4.5.1"

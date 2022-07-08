@@ -69,7 +69,8 @@ var server = app.listen(PORT, function(){
   console.log(`${config.NODE_ENV} server listening on port ` + PORT);
 });
 // const server = https.createServer(options, app);
-var io = new Server(3058);
+var io = new Server(config.SOCKET_PORT);
+// var io = new Server(server);
 
 
 ("use strict");
@@ -115,9 +116,9 @@ io.on("connection", function (socket) {
       user_id: args.user_id,
     };
     clients[socket.id] = args.user_id;
-    console.log(clients);
+    console.log("clients", clients);
     //socket.broadcast.emit('connectUser', data);
-    io.sockets.emit("connectUser", data);
+    socket.emit("connectUser", data);
   });
   /*socket.on("isConnected", function (id, ackFn) {
     let otherSocket = io.sockets.clients[id];
@@ -439,10 +440,10 @@ io.on("connection", function (socket) {
     var data = {
       user_id: connected_user,
     };
-    //io.sockets.emit('AllConnectedUsers', data);
-    socket.broadcast.emit('GetOnlineUsers', data);
+    // io.sockets.emit('AllConnectedUsers', data);
+    // socket.broadcast.emit('GetOnlineUsers', data);
     console.log("GetOnlineUsers", data);
-    io.sockets.emit("GetOnlineUsers", data);
+    socket.emit("GetOnlineUsers", data);
   });
 
   socket.on("message", function (message) {
@@ -567,7 +568,6 @@ function findUsersConnected(room, namespace) {
 
   var names = [];
   var ns = io.of("/").adapter.rooms;
-  console.log("findUsersConnected()", io.of("/").adapter.rooms);
   if (ns) {
     ns.forEach((id, key) => {
       names.push(key);
