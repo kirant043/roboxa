@@ -104,8 +104,11 @@ var server = app.listen(PORT, function(){
   console.log(`${config.NODE_ENV} server listening on port ` + PORT);
 });
 // const server = https.createServer(options, app);
-var io = new Server(server);
-io.set('origins', '*:*')
+var io = new Server(server, {
+  cors: {
+    origin: ["*"],
+  }
+});
 
 io.on("connection", function (socket) {
   console.log("Handshake url", socket.handshake)
