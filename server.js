@@ -11,7 +11,7 @@ const config =  require('./config.js');
 const PORT = config.PORT;
 
 var cors = require('cors'); //import cors module
-var whitelist = ['http://localhost:5000']; //white list consumers
+var whitelist = ['http://localhost:5000', 'localhost', 'https://localhost:5000']; //white list consumers
 var corsOptions = {
   origin: function (origin, callback) {
     if (whitelist.indexOf(origin) !== -1) {
