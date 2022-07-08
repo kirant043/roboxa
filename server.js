@@ -105,6 +105,7 @@ var server = app.listen(PORT, function(){
 });
 // const server = https.createServer(options, app);
 var io = new Server(server);
+io.origins('*:*')
 
 io.on("connection", function (socket) {
   console.log("Handshake url", socket.handshake)
