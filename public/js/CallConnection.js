@@ -29,7 +29,19 @@ var serverconfig = {
   // Uses Google's STUN server
   iceServers: [
     {
-      urls: "stun:stun.l.google.com:19302",
+      urls: ["stun:s3.xirsys.com"],
+    },
+    {
+      username: "52924132-59a0-11e8-b2c1-4ba290c8c0a3",
+      credential: "529241e6-59a0-11e8-a048-17ad96ba1721",
+      urls: [
+        "turn:s3.xirsys.com:80?transport=udp",
+        "turn:s3.xirsys.com:3478?transport=udp",
+        "turn:s3.xirsys.com:80?transport=tcp",
+        "turn:s3.xirsys.com:3478?transport=tcp",
+        "turns:s3.xirsys.com:443?transport=tcp",
+        "turns:s3.xirsys.com:5349?transport=tcp",
+      ],
     },
   ],
 };
@@ -307,16 +319,16 @@ function whiteNoise() {
 
 function gotStream(stream) {
   console.log("Streaming Video", stream.getVideoTracks()[0]);
-  localStream = stream;
-  localVideo.srcObject = stream;
   if (localStream.getVideoTracks().length == 0) {
     whiteNoise()
       .getTracks()
       .forEach((track) => localStream.addTrack(track, stream));
   }
-  sendMessage("got user media");
+  console.log("Adding local stream.");
+  localStream = stream;
+  localVideo.srcObject = stream;
+  sendMessage("got user media", room);
   if (isInitiator) {
-    console.log("Adding local stream.");
     maybeStart();
   }
 }
@@ -445,46 +457,13 @@ var constraints = {
 //     //}
 var globalsstream = "";
 function maybeStart() {
-  //console.log('>>>>>>> maybeStart() ', isStarted, localStream, isChannelReady);
-  if (
-    !isStarted &&
-    typeof localStream !== "undefined" &&
-    isChannelReady &&
-    localStream != ""
-  ) {
-    //  console.log('>>>>>> creating peer connection');
+  console.log(">>>>>>> maybeStart() ", isStarted, localStream, isChannelReady);
+  if (!isStarted && typeof localStream !== "undefined" && isChannelReady) {
+    console.log(">>>>>> creating peer connection");
     createPeerConnection();
-    // pc.addStream(localStream);
-
-    // const audio = new Audio("https://sample-videos.com/audio/mp3/crowd-cheering.mp3");
-    // audio.loop = true;
-    // audio.crossOrigin = 'anonymous';
-    // audio.play();
-
-    // const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    // const stream_dest = ctx.createMediaStreamDestination();
-    // const source = ctx.createMediaElementSource(audio);
-    // source.connect(stream_dest);
-
-    // const stream222 = stream_dest.stream;
-    //  var track = localStream.getVideoTracks()[0];
-    //   var track2 = localStream.getAudioTracks()[0];
-    //   // var audioMixer = new MultiStreamsMixer([au, track2]);
-    //    // var track3 = au;
-    //  pc.addTrack(track, localStream)
-    //   pc.addTrack(track2, localStream)
-    // pc.addTrack(stream222, localStream)
-    //  pc.addStream(track2);
-    // pc.addTrack(track3);
-    globalsstream = localStream
-      .getTracks()
-      .forEach((track) => pc.addTrack(track, localStream));
-
-    //       var track = localStream.getVideoTracks()[0];
-    // globalsstream = pc.addTrack(track, localStream);
-
+    pc.addStream(localStream);
     isStarted = true;
-
+    console.log("isInitiator", isInitiator);
     if (isInitiator) {
       doCall();
     }
@@ -562,7 +541,7 @@ function onCreateSessionDescriptionError(error) {
 function handleRemoteStreamAdded(event) {
   console.log("Remote stream added.");
 
-  remoteStream = event.streams[0];
+  remoteStream = event.streams;
 
   // window.stream used for recording call
   window.stream = remoteStream;
