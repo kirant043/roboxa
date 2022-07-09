@@ -255,7 +255,7 @@ function showWorkerList(data) {
       "</span></td>" +
       '<td scope="row" class="ellipsis-text"><span id="span5' +
       data[i]._id +
-      '">'+status+'</span></td>' +
+      '">Inactive</span></td>' +
       '<td><button type="button" name="' +
       data[i].f_name +
       " " +
@@ -266,12 +266,9 @@ function showWorkerList(data) {
       data[i].location +
       '" id="' +
       data[i].user_id +
-      '" class="btn btn-success btn-sm" data-toggle="modal" OnClick="makeCall(this)">Call</button></td>' +
+      '" class="btn btn-success btn-sm" data-toggle="modal" disabled OnClick="makeCall(this)">Call</button></td>' +
       "</tr>";
     $("#tblContent").append(tblContent);
-    if(!data[i].is_active) {
-        $("button#"+data[i].user_id).attr('disabled', 'disabled');
-    }
   }
 }
 
