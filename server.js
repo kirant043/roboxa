@@ -76,7 +76,6 @@ var io = new Server(3058);
 ("use strict");
 
 io.on("connection", function (socket) {
-  console.log("Handshake url", socket.handshake)
   // console log user id who connected to the server and room name from socket object
   console.log(socket.rooms)
   console.log('############################')
