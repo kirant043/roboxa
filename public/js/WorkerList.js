@@ -569,7 +569,9 @@ socket.on("callEnd", function (data) {
   isInitiator = false;
   isStarted = false;
   isChannelReady = false;
-  pc.close();
+  if(pc) {
+    pc.close();
+  }
 
   $("#screenshotvideocanvas").hide();
   $("#screenshotvideo").hide();
