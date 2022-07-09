@@ -30,14 +30,10 @@ var serverconfig = {
 
   iceServers: [
     {
-      urls: [
-        "stun.l.google.com:19302",
-        "stun1.l.google.com:19302",
-        "stun2.l.google.com:19302",
-        "stun3.l.google.com:19302",
-        "stun4.l.google.com:19302",
-      ]
-    }
+      urls: "turn:3.133.140.120:3478?transport=tcp",
+      username: 'user',
+      credential: 'root',
+    },
   ],
 };
 
