@@ -570,7 +570,9 @@ function findUsersConnected(room, namespace) {
   var ns = io.of("/").adapter.rooms;
   if (ns) {
     ns.forEach((id, key) => {
-      names.push(key);
+      if(!names.some(item => item === key)) {
+        names.push(key);
+      }
     })
     // for (var id in ns.connected) {
     //   // if (room) {
