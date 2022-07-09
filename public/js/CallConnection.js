@@ -27,22 +27,19 @@ var callerbusy = false;
 
 var serverconfig = {
   // Uses Google's STUN server
+
   iceServers: [
     {
-      urls: ["stun:s3.xirsys.com"],
-    },
-    {
-      username: "52924132-59a0-11e8-b2c1-4ba290c8c0a3",
-      credential: "529241e6-59a0-11e8-a048-17ad96ba1721",
       urls: [
-        "turn:s3.xirsys.com:80?transport=udp",
-        "turn:s3.xirsys.com:3478?transport=udp",
-        "turn:s3.xirsys.com:80?transport=tcp",
-        "turn:s3.xirsys.com:3478?transport=tcp",
-        "turns:s3.xirsys.com:443?transport=tcp",
-        "turns:s3.xirsys.com:5349?transport=tcp",
+        "turn:173.194.72.127:19305?transport=udp",
+        "turn:[2404:6800:4008:C01::7F]:19305?transport=udp",
+        "turn:173.194.72.127:443?transport=tcp",
+        "turn:[2404:6800:4008:C01::7F]:443?transport=tcp",
       ],
+      username: "CKjCuLwFEgahxNRjuTAYzc/s6OMT",
+      credential: "u1SQDR/SQsPQIxXNWQT7czc/G4c=",
     },
+    { urls: ["stun:stun.l.google.com:19302"] },
   ],
 };
 
