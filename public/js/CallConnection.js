@@ -27,12 +27,9 @@ var callerbusy = false;
 
 var serverconfig = {
   // Uses Google's STUN server
-
   iceServers: [
     {
-      urls: "turn:3.133.140.120:3478?transport=tcp",
-      username: 'user',
-      credential: 'root',
+      urls: "stun:stun.l.google.com:19302",
     },
   ],
 };
