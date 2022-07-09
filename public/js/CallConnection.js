@@ -416,26 +416,27 @@ function createOrJoin(user_id, other_user_id) {
   getUserMedia();
 }
 
-socket.on("message", function (message) {
-  console.log("Client received message:", message);
-  if (message.type === "offer") {
-    if (!isInitiator && !isStarted) {
+socket.on("message", function(message, room) {
+    console.log('Client received message:', message,  room);
+    if (message === 'got user media') {
       maybeStart();
+    } else if (message.type === 'offer') {
+      if (!isInitiator && !isStarted) {
+        maybeStart();
+      }
+      pc.setRemoteDescription(new RTCSessionDescription(message));
+      doAnswer();
+    } else if (message.type === 'answer' && isStarted) {
+      pc.setRemoteDescription(new RTCSessionDescription(message));
+    } else if (message.type === 'candidate' && isStarted) {
+      var candidate = new RTCIceCandidate({
+        sdpMLineIndex: message.label,
+        candidate: message.candidate
+      });
+      pc.addIceCandidate(candidate);
+    } else if (message === 'bye' && isStarted) {
+      handleRemoteHangup();
     }
-    pc.setRemoteDescription(new RTCSessionDescription(message));
-    doAnswer();
-  } else if (message.type === "answer" && isStarted) {
-    pc.setRemoteDescription(new RTCSessionDescription(message));
-  } else if (message.type === "candidate" && isStarted) {
-    var candidate = new RTCIceCandidate({
-      sdpMLineIndex: message.label,
-      candidate: message.candidate,
-    });
-
-    pc.addIceCandidate(candidate);
-  } else if (message === "bye" && isStarted) {
-    handleRemoteHangup();
-  }
 });
 
 ////////////////////////////////////////////////////
