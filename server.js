@@ -440,8 +440,8 @@ io.on("connection", function (socket) {
     var data = {
       user_id: connected_user,
     };
-    // io.sockets.emit('AllConnectedUsers', data);
-    // socket.broadcast.emit('GetOnlineUsers', data);
+    io.sockets.emit('GetOnlineUsers', data);
+    socket.broadcast.emit('GetOnlineUsers', data);
     console.log("GetOnlineUsers", data);
     socket.emit("GetOnlineUsers", data);
   });
