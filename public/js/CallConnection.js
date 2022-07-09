@@ -319,9 +319,9 @@ function whiteNoise() {
 }
 
 function gotStream(stream) {
-  console.log("Streaming Video", stream.getVideoTracks());
-  localStream = stream.getVideoTracks()[0];
-  localVideo.srcObject = stream.getVideoTracks()[0];
+  console.log("Streaming Video", stream.getVideoTracks()[0]);
+  localStream = stream;
+  localVideo.srcObject = stream;
   if (localStream.getVideoTracks().length == 0) {
     whiteNoise()
       .getTracks()
