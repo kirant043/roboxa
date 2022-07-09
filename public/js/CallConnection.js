@@ -27,7 +27,6 @@ var callerbusy = false;
 
 var serverconfig = {
   // Uses Google's STUN server
-  sdpSemantics: "unified-plan",
   iceServers: [
     {
       urls: ["stun:s3.xirsys.com"],
@@ -512,6 +511,7 @@ window.onbeforeunload = function () {
 
 function createPeerConnection() {
   try {
+    console.log("Creating RTCPeerConnnection....");
     uniqcallid = "";
     pc = new RTCPeerConnection(serverconfig);
     pc.onicecandidate = handleIceCandidate;
