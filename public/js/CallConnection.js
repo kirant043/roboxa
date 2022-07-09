@@ -58,7 +58,7 @@ var sdpConstraints = {
 // could prompt for room name:
 // room = prompt('enter room name:');
 
-// socket = io("https://nsbluescope.roboxatech.com:443");
+socket = io("https://nsbluescope.roboxatech.com:443");
 // socket = io("http://localhost:5000");
 
 socket.on("connect", function () {
