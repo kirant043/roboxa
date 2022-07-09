@@ -474,7 +474,7 @@ io.on("connection", function (socket) {
       ? Object.keys(clientsInRoom.sockets).length
       : 0;
     log("Room " + room + " now has " + numClients + " client(s)");
-
+    console.log("numClients", numClients)
     if (numClients === 0) {
       socket.join(room);
       log("Client ID " + socket.id + " created room " + room);
