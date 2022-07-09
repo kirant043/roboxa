@@ -399,8 +399,8 @@ io.on("connection", function (socket) {
       user_id: args.user_id,
     };
     socket.in(args.other_user_id).emit("callAnswer", data);
-    //io.sockets.in(args.other_user_id).emit('callAnswer', data);
-    //socket.broadcast.emit('callAnswer', data);
+    io.sockets.in(args.other_user_id).emit('callAnswer', data);
+    socket.broadcast.emit('callAnswer', data);
   });
 
   socket.on("callEnd", function (args) {
