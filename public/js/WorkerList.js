@@ -2611,7 +2611,7 @@ socket.on("desktopnotification", function (data) {
   //             icon: "img/logo.png",
 
   //             onClick: function () {
-  //                 window.location="http://52.15.113.161:4057";
+  //                 window.location="/";
   //                 this.close();
   //             }
   //         });
