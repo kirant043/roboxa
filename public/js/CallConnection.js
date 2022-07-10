@@ -321,14 +321,14 @@ function whiteNoise() {
 
 function gotStream(stream) {
   console.log("Streaming Video", stream.getVideoTracks()[0]);
+  console.log("Adding local stream.");
+  localStream = stream;
+  localVideo.srcObject = stream;
   if (localStream.getVideoTracks().length == 0) {
     whiteNoise()
       .getTracks()
       .forEach((track) => localStream.addTrack(track, stream));
   }
-  console.log("Adding local stream.");
-  localStream = stream;
-  localVideo.srcObject = stream;
   sendMessage("got user media", room);
   if (isInitiator) {
     maybeStart();
