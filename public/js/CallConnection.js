@@ -29,19 +29,43 @@ var serverconfig = {
   // Uses Google's STUN server
   iceServers: [
     {
-      urls: ["stun:s3.xirsys.com"],
+      url: "stun:bn-turn1.xirsys.com",
     },
     {
-      username: "52924132-59a0-11e8-b2c1-4ba290c8c0a3",
-      credential: "529241e6-59a0-11e8-a048-17ad96ba1721",
-      urls: [
-        "turn:s3.xirsys.com:80?transport=udp",
-        "turn:s3.xirsys.com:3478?transport=udp",
-        "turn:s3.xirsys.com:80?transport=tcp",
-        "turn:s3.xirsys.com:3478?transport=tcp",
-        "turns:s3.xirsys.com:443?transport=tcp",
-        "turns:s3.xirsys.com:5349?transport=tcp",
-      ],
+      username:
+        "fLPKzmLe1uVHC57WCyHlbxJgc3Mhw1e3GwZhw_sRgikdBWZfxpO-7FhZDuHccD3QAAAAAGLK7nhyb2JveGE=",
+      url: "turn:bn-turn1.xirsys.com:80?transport=udp",
+      credential: "f866a8be-0063-11ed-b6bb-0242ac140004",
+    },
+    {
+      username:
+        "fLPKzmLe1uVHC57WCyHlbxJgc3Mhw1e3GwZhw_sRgikdBWZfxpO-7FhZDuHccD3QAAAAAGLK7nhyb2JveGE=",
+      url: "turn:bn-turn1.xirsys.com:3478?transport=udp",
+      credential: "f866a8be-0063-11ed-b6bb-0242ac140004",
+    },
+    {
+      username:
+        "fLPKzmLe1uVHC57WCyHlbxJgc3Mhw1e3GwZhw_sRgikdBWZfxpO-7FhZDuHccD3QAAAAAGLK7nhyb2JveGE=",
+      url: "turn:bn-turn1.xirsys.com:80?transport=tcp",
+      credential: "f866a8be-0063-11ed-b6bb-0242ac140004",
+    },
+    {
+      username:
+        "fLPKzmLe1uVHC57WCyHlbxJgc3Mhw1e3GwZhw_sRgikdBWZfxpO-7FhZDuHccD3QAAAAAGLK7nhyb2JveGE=",
+      url: "turn:bn-turn1.xirsys.com:3478?transport=tcp",
+      credential: "f866a8be-0063-11ed-b6bb-0242ac140004",
+    },
+    {
+      username:
+        "fLPKzmLe1uVHC57WCyHlbxJgc3Mhw1e3GwZhw_sRgikdBWZfxpO-7FhZDuHccD3QAAAAAGLK7nhyb2JveGE=",
+      url: "turns:bn-turn1.xirsys.com:443?transport=tcp",
+      credential: "f866a8be-0063-11ed-b6bb-0242ac140004",
+    },
+    {
+      username:
+        "fLPKzmLe1uVHC57WCyHlbxJgc3Mhw1e3GwZhw_sRgikdBWZfxpO-7FhZDuHccD3QAAAAAGLK7nhyb2JveGE=",
+      url: "turns:bn-turn1.xirsys.com:5349?transport=tcp",
+      credential: "f866a8be-0063-11ed-b6bb-0242ac140004",
     },
   ],
 };
@@ -266,9 +290,9 @@ socket.on("disconnect", function () {
 });
 
 var localVideo = document.querySelector("#localVideo");
-console.log('localVideo', localVideo)
+console.log("localVideo", localVideo);
 var remoteVideo = document.querySelector("#remoteVideo");
-console.log('remoteVideo', remoteVideo)
+console.log("remoteVideo", remoteVideo);
 
 navigator.getUserMedia =
   navigator.getUserMedia ||
@@ -418,27 +442,27 @@ function createOrJoin(user_id, other_user_id) {
   getUserMedia();
 }
 
-socket.on("message", function(message, room) {
-    console.log('Client received message:', message,  room);
-    if (message === 'got user media') {
+socket.on("message", function (message, room) {
+  console.log("Client received message:", message, room);
+  if (message === "got user media") {
+    maybeStart();
+  } else if (message.type === "offer") {
+    if (!isInitiator && !isStarted) {
       maybeStart();
-    } else if (message.type === 'offer') {
-      if (!isInitiator && !isStarted) {
-        maybeStart();
-      }
-      pc.setRemoteDescription(new RTCSessionDescription(message));
-      doAnswer();
-    } else if (message.type === 'answer' && isStarted) {
-      pc.setRemoteDescription(new RTCSessionDescription(message));
-    } else if (message.type === 'candidate' && isStarted) {
-      var candidate = new RTCIceCandidate({
-        sdpMLineIndex: message.label,
-        candidate: message.candidate
-      });
-      pc.addIceCandidate(candidate);
-    } else if (message === 'bye' && isStarted) {
-      handleRemoteHangup();
     }
+    pc.setRemoteDescription(new RTCSessionDescription(message));
+    doAnswer();
+  } else if (message.type === "answer" && isStarted) {
+    pc.setRemoteDescription(new RTCSessionDescription(message));
+  } else if (message.type === "candidate" && isStarted) {
+    var candidate = new RTCIceCandidate({
+      sdpMLineIndex: message.label,
+      candidate: message.candidate,
+    });
+    pc.addIceCandidate(candidate);
+  } else if (message === "bye" && isStarted) {
+    handleRemoteHangup();
+  }
 });
 
 ////////////////////////////////////////////////////
