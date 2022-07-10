@@ -278,7 +278,7 @@ function getUserMedia() {
     .getUserMedia({
       audio: true,
       //video:false
-      video: { width: 640, height: 360 },
+      video: true,
     })
     .then(gotStream)
     .catch(function (e) {
