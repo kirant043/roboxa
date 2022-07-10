@@ -393,7 +393,6 @@ function createOrJoin(user_id, other_user_id) {
   socket.on("created", function (room) {
     console.log("Created room " + room);
     isInitiator = true;
-    isChannelReady = true;
   });
 
   socket.on("full", function (room) {
