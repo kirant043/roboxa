@@ -266,7 +266,9 @@ socket.on("disconnect", function () {
 });
 
 var localVideo = document.querySelector("#localVideo");
+console.log('localVideo', localVideo)
 var remoteVideo = document.querySelector("#remoteVideo");
+console.log('remoteVideo', remoteVideo)
 
 navigator.getUserMedia =
   navigator.getUserMedia ||
