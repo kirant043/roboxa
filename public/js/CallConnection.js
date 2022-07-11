@@ -276,26 +276,7 @@ function getUserMedia() {
       //video:false
       video: { width: 640, height: 360 },
     })
-    .then(gotStream)
-    .catch(function (e) {
-      navigator.mediaDevices
-        .getUserMedia({
-          audio: true,
-        })
-        .then(gotStream2)
-        .catch(function (e) {
-          setTimeout(function () {
-            localVideo.srcObject = whiteNoise();
-            localStream = whiteNoise();
-            sendMessage("got user media");
-
-            if (isInitiator) {
-              console.log("Adding local stream.");
-              maybeStart();
-            }
-          }, 1500);
-        });
-    });
+    .then(gotStream);
 }
 
 function whiteNoise() {
