@@ -27,16 +27,14 @@ var callerbusy = false;
 var isIceServerReady = false;
 var iceServers;
 
-function f() { 
-    return $.get('/geticeservers');
-};
-  
-const FnGetIceServers = async () => {
-    var x = await f();
-    return x["iceServers"]
+function f() {
+  return $.get("/geticeservers");
 }
-  
 
+const FnGetIceServers = async () => {
+  var x = await f();
+  return x["iceServers"];
+};
 
 var serverconfig = {
   // Uses Google's STUN server
@@ -509,33 +507,31 @@ window.onbeforeunload = function () {
 /////////////////////////////////////////////////////////
 
 function createPeerConnection() {
-  try {
-    uniqcallid = "";
+  FnGetIceServers().then((iceServers) => {
+    try {
+      uniqcallid = "";
+      console.log("iceServers", iceServers);
+      serverconfig = {
+        // Uses Google's STUN server
+        iceServers: iceServers,
+      };
+      console.log("serverconfig", serverconfig);
+      pc = new RTCPeerConnection(serverconfig);
+      pc.onicecandidate = handleIceCandidate;
+      pc.ontrack = handleRemoteStreamAdded;
+      pc.onremovestream = handleRemoteStreamRemoved;
+      console.log("Created RTCPeerConnnection");
+      $("#allbuttonvideo").show();
 
-    FnGetIceServers().then(iceServers => {
-        console.log("iceServers",iceServers)
-        serverconfig = {
-            // Uses Google's STUN server
-            iceServers: iceServers,
-        }
-        console.log("serverconfig", serverconfig)
-        pc = new RTCPeerConnection(serverconfig);
-        pc.onicecandidate = handleIceCandidate;
-        pc.ontrack = handleRemoteStreamAdded;
-        pc.onremovestream = handleRemoteStreamRemoved;
-        console.log("Created RTCPeerConnnection");
-        $("#allbuttonvideo").show();
-
-        uniqcallid = Math.floor(
+      uniqcallid = Math.floor(
         Math.random() * Math.floor("34564654654")
-        ).toString();
-    })
-    
-  } catch (e) {
-    console.log("Failed to create PeerConnection, exception: " + e.message);
-    alert("Cannot create RTCPeerConnection object.");
-    return;
-  }
+      ).toString();
+    } catch (e) {
+      console.log("Failed to create PeerConnection, exception: " + e.message);
+      alert("Cannot create RTCPeerConnection object.");
+      return;
+    }
+  });
 }
 
 function handleIceCandidate(event) {
