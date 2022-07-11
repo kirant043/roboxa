@@ -429,7 +429,7 @@ socket.on("message", function (message) {
       candidate: message.candidate,
     });
 
-    pc.addIceCandidate(candidate);
+    pc.addIceCandidate(message.candidate);
   } else if (message === "bye" && isStarted) {
     handleRemoteHangup();
   }
