@@ -42,7 +42,7 @@ module.exports = function (app) {
       data["iceServers"].push({"urls": servers["iceServers"][0]["url"]})
       data["iceServers"].push({
         "username": servers["iceServers"][1]["username"],
-        "urls": [servers["iceServers"][1]["url"], servers["iceServers"][2]["url"]],
+        "urls": [servers["iceServers"][1]["url"], servers["iceServers"][2]["url"], servers["iceServers"][3]["url"]],
         "credential": servers["iceServers"][1]["credential"]
       })
       res.json(data);
