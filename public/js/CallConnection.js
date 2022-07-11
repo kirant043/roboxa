@@ -24,48 +24,49 @@ var pcConfig = {
   ],
 };
 var callerbusy = false;
+RTCPeerConnection = window.RTCPeerConnection || window.webkitRTCPeerConnection;
 
 var serverconfig = {
   // Uses Google's STUN server
   iceServers: [
     {
-      url: "stun:bn-turn1.xirsys.com",
+      "url": "stun:bn-turn1.xirsys.com",
     },
     {
-      username:
+      "username":
         "fLPKzmLe1uVHC57WCyHlbxJgc3Mhw1e3GwZhw_sRgikdBWZfxpO-7FhZDuHccD3QAAAAAGLK7nhyb2JveGE=",
-      url: "turn:bn-turn1.xirsys.com:80?transport=udp",
-      credential: "f866a8be-0063-11ed-b6bb-0242ac140004",
+      "url": "turn:bn-turn1.xirsys.com:80?transport=udp",
+      "credential": "f866a8be-0063-11ed-b6bb-0242ac140004",
     },
     {
-      username:
+      "username":
         "fLPKzmLe1uVHC57WCyHlbxJgc3Mhw1e3GwZhw_sRgikdBWZfxpO-7FhZDuHccD3QAAAAAGLK7nhyb2JveGE=",
-      url: "turn:bn-turn1.xirsys.com:3478?transport=udp",
-      credential: "f866a8be-0063-11ed-b6bb-0242ac140004",
+      "url": "turn:bn-turn1.xirsys.com:3478?transport=udp",
+      "credential": "f866a8be-0063-11ed-b6bb-0242ac140004",
     },
     {
-      username:
+      "username":
         "fLPKzmLe1uVHC57WCyHlbxJgc3Mhw1e3GwZhw_sRgikdBWZfxpO-7FhZDuHccD3QAAAAAGLK7nhyb2JveGE=",
-      url: "turn:bn-turn1.xirsys.com:80?transport=tcp",
-      credential: "f866a8be-0063-11ed-b6bb-0242ac140004",
+      "url": "turn:bn-turn1.xirsys.com:80?transport=tcp",
+      "credential": "f866a8be-0063-11ed-b6bb-0242ac140004",
     },
     {
-      username:
+      "username":
         "fLPKzmLe1uVHC57WCyHlbxJgc3Mhw1e3GwZhw_sRgikdBWZfxpO-7FhZDuHccD3QAAAAAGLK7nhyb2JveGE=",
-      url: "turn:bn-turn1.xirsys.com:3478?transport=tcp",
-      credential: "f866a8be-0063-11ed-b6bb-0242ac140004",
+      "url": "turn:bn-turn1.xirsys.com:3478?transport=tcp",
+      "credential": "f866a8be-0063-11ed-b6bb-0242ac140004",
     },
     {
-      username:
+      "username":
         "fLPKzmLe1uVHC57WCyHlbxJgc3Mhw1e3GwZhw_sRgikdBWZfxpO-7FhZDuHccD3QAAAAAGLK7nhyb2JveGE=",
-      url: "turns:bn-turn1.xirsys.com:443?transport=tcp",
-      credential: "f866a8be-0063-11ed-b6bb-0242ac140004",
+      "url": "turns:bn-turn1.xirsys.com:443?transport=tcp",
+      "credential": "f866a8be-0063-11ed-b6bb-0242ac140004",
     },
     {
-      username:
+      "username":
         "fLPKzmLe1uVHC57WCyHlbxJgc3Mhw1e3GwZhw_sRgikdBWZfxpO-7FhZDuHccD3QAAAAAGLK7nhyb2JveGE=",
-      url: "turns:bn-turn1.xirsys.com:5349?transport=tcp",
-      credential: "f866a8be-0063-11ed-b6bb-0242ac140004",
+      "url": "turns:bn-turn1.xirsys.com:5349?transport=tcp",
+      "credential": "f866a8be-0063-11ed-b6bb-0242ac140004",
     },
   ],
 };
