@@ -31,6 +31,8 @@ $(document).ready(function () {
   FnGetWorkerListByCallHistory();
   getAllnotification();
   FnGetRecentUplodedDoc();
+  var localVideo = document.querySelector('#localVideo');
+  var remoteVideo = document.querySelector('#remoteVideo');
 
   $("input[id=filedata]").change(function (ev) {
     $("#filenameshow").innerHTML = "";
