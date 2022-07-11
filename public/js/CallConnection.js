@@ -36,9 +36,6 @@ const FnGetIceServers = async () => {
     return x["iceServers"]
 }
   
-FnGetIceServers().then(iceServers => {
-    console.log("iceServers",iceServers)
-})
 
 
 var serverconfig = {
@@ -514,17 +511,26 @@ window.onbeforeunload = function () {
 function createPeerConnection() {
   try {
     uniqcallid = "";
-    console.log("serverconfig", serverconfig)
-    pc = new RTCPeerConnection(serverconfig);
-    pc.onicecandidate = handleIceCandidate;
-    pc.ontrack = handleRemoteStreamAdded;
-    pc.onremovestream = handleRemoteStreamRemoved;
-    console.log("Created RTCPeerConnnection");
-    $("#allbuttonvideo").show();
 
-    uniqcallid = Math.floor(
-      Math.random() * Math.floor("34564654654")
-    ).toString();
+    FnGetIceServers().then(iceServers => {
+        console.log("iceServers",iceServers)
+        serverconfig = {
+            // Uses Google's STUN server
+            iceServers: iceServers,
+        }
+        console.log("serverconfig", serverconfig)
+        pc = new RTCPeerConnection(serverconfig);
+        pc.onicecandidate = handleIceCandidate;
+        pc.ontrack = handleRemoteStreamAdded;
+        pc.onremovestream = handleRemoteStreamRemoved;
+        console.log("Created RTCPeerConnnection");
+        $("#allbuttonvideo").show();
+
+        uniqcallid = Math.floor(
+        Math.random() * Math.floor("34564654654")
+        ).toString();
+    })
+    
   } catch (e) {
     console.log("Failed to create PeerConnection, exception: " + e.message);
     alert("Cannot create RTCPeerConnection object.");
