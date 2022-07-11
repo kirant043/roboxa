@@ -473,9 +473,9 @@ function maybeStart() {
     // pc.addTrack(stream222, localStream)
     //  pc.addStream(track2);
     // pc.addTrack(track3);
-    globalsstream = localStream
-      .getTracks()
-      .forEach((track) => pc.addTrack(track, localStream));
+    // globalsstream = localStream
+    //   .getTracks()
+    //   .forEach((track) => pc.addTrack(track, localStream));
 
     //       var track = localStream.getVideoTracks()[0];
     // globalsstream = pc.addTrack(track, localStream);
@@ -514,6 +514,9 @@ function createPeerConnection() {
       uniqcallid = Math.floor(
         Math.random() * Math.floor("34564654654")
       ).toString();
+      globalsstream = localStream
+      .getTracks()
+      .forEach((track) => pc.addTrack(track, localStream));
     } catch (e) {
       console.log("Failed to create PeerConnection, exception: " + e.message);
       alert("Cannot create RTCPeerConnection object.");
