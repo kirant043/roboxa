@@ -276,7 +276,14 @@ function getUserMedia() {
       //video:false
       video: { width: 640, height: 360 },
     })
-    .then(gotStream);
+    .then(gotStream)
+    .catch(function (e) {
+      navigator.mediaDevices
+        .getUserMedia({
+          audio: true,
+        })
+        .then(gotStream2);
+    });
 }
 
 function whiteNoise() {
