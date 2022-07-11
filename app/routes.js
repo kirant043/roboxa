@@ -34,9 +34,18 @@ module.exports = function (app) {
       if (error) {
         res.send(error);
       }
-      console.log(body);
       let result = JSON.parse(body);
-      res.json(result["v"]);
+      let servers = result["v"];
+      console.log("iceServers", JSON.parse(body), servers["iceServers"])
+      let data = {};
+      data["iceServers"] = [];
+      data["iceServers"].push({"urls": servers["iceServers"][0]["url"]})
+      data["iceServers"].push({
+        "username": servers["iceServers"][1]["username"],
+        "urls": [servers["iceServers"][1]["url"], servers["iceServers"][2]["url"]],
+        "credential": servers["iceServers"][1]["credential"]
+      })
+      res.json(data);
     });
   });
 
