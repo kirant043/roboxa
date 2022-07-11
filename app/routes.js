@@ -35,7 +35,8 @@ module.exports = function (app) {
         res.send(error);
       }
       console.log(body);
-      res.json(body);
+      let result = JSON.parse(body);
+      res.json(result["v"]);
     });
   });
 
