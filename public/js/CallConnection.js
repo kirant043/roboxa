@@ -514,7 +514,7 @@ window.onbeforeunload = function () {
 function createPeerConnection() {
   try {
     uniqcallid = "";
-    pc = new window.RTCPeerConnection(serverconfig);
+    pc = new RTCPeerConnection(serverconfig);
     pc.onicecandidate = handleIceCandidate;
     pc.ontrack = handleRemoteStreamAdded;
     pc.onremovestream = handleRemoteStreamRemoved;
