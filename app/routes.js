@@ -24,7 +24,8 @@ module.exports = function (app) {
       method: "PUT",
       url: "https://global.xirsys.net/_turn/MyFirstApp",
       headers: {
-        authorization:
+        "Content-type": "application/json",
+        "authorization":
           "Basic cm9ib3hhOmRmMTMyOWFlLTU5OGQtMTFlOC04NDNmLTY0ZTVjZWFiMWEwMQ==",
       },
     };
