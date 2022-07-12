@@ -505,14 +505,13 @@ function createPeerConnection() {
       };
       console.log("serverconfig", serverconfig);
       pc = new RTCPeerConnection(serverconfig);
-      pc.addEventListener('track', async (event) => {
-        console.log('adding remote track');
-        const [remoteStream] = event.streams;
-        remoteVideo.srcObject = remoteStream;
-    });
+      pc.addEventListener("track", function (event) {
+        console.log("addEventListener track working")
+        remoteVideo.srcObject = event.streams[0];
+      });
       pc.onicecandidate = handleIceCandidate;
       pc.ontrack = handleRemoteStreamAdded;
-      pc.addEventListener('track', handleRemoteStreamAdded);
+      pc.addEventListener("track", handleRemoteStreamAdded);
       pc.onremovestream = handleRemoteStreamRemoved;
       console.log("Created RTCPeerConnnection");
       $("#allbuttonvideo").show();
@@ -521,8 +520,8 @@ function createPeerConnection() {
         Math.random() * Math.floor("34564654654")
       ).toString();
       globalsstream = localStream
-      .getTracks()
-      .forEach((track) => pc.addTrack(track, localStream));
+        .getTracks()
+        .forEach((track) => pc.addTrack(track, localStream));
     } catch (e) {
       console.log("Failed to create PeerConnection, exception: " + e.message);
       alert("Cannot create RTCPeerConnection object.");
@@ -575,7 +574,7 @@ function onCreateSessionDescriptionError(error) {
 function handleRemoteStreamAdded(event) {
   console.log("Remote stream added.");
 
-  remoteStream = event.stream;
+  remoteStream = event.streams[0];
 
   // window.stream used for recording call
   window.stream = remoteStream;
