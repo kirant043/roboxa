@@ -572,19 +572,15 @@ function onCreateSessionDescriptionError(error) {
   trace("Failed to create session description: " + error.toString());
 }
 
-function handleRemoteStreamAdded(ev) {
-    console.log("Remote stream added.");
-    if (ev.streams && ev.streams[0]) {
-        remoteVideo.srcObject = ev.streams[0];
-        remoteStream = ev;
-        window.stream = remoteStream;
-    } else {
-      let inboundStream = new MediaStream(ev.track);
-      console.log("inboundStream added", inboundStream)
-      remoteVideo.srcObject = inboundStream;
-      remoteStream = inboundStream;
-      window.stream = remoteStream;
-    }
+function handleRemoteStreamAdded(event) {
+  console.log("Remote stream added.");
+
+  remoteStream = event.streams[0];
+
+  // window.stream used for recording call
+  window.stream = remoteStream;
+  //
+  remoteVideo.srcObject = remoteStream;
   sendMessage("Remote Stream Added");
 }
 
