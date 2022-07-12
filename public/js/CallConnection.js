@@ -450,8 +450,8 @@ function maybeStart() {
     localStream != ""
   ) {
     //  console.log('>>>>>> creating peer connection');
-    
-    console.log('>>>>>> creating peer connection');
+
+    console.log(">>>>>> creating peer connection");
     createPeerConnection();
   }
 }
@@ -464,11 +464,12 @@ window.onbeforeunload = function () {
 
 function createPeerConnection() {
   FnGetIceServers().then((iceServers) => {
+    try {
       uniqcallid = "";
       var configuration = {
         offerToReceiveAudio: true,
-        offerToReceiveVideo: true
-        }
+        offerToReceiveVideo: true,
+      };
       console.log("iceServers", iceServers);
       serverconfig = {
         configuration,
@@ -487,11 +488,16 @@ function createPeerConnection() {
         Math.random() * Math.floor("34564654654")
       ).toString();
       // globalsstream = localStream.getTracks().forEach((track) => pc.addTrack(track, localStream));
-    pc.addStream(localStream);
-    isStarted = true;
-    console.log('isInitiator', isInitiator);
-    if (isInitiator) {
+      pc.addStream(localStream);
+      isStarted = true;
+      console.log("isInitiator", isInitiator);
+      if (isInitiator) {
         doCall();
+      }
+    } catch (e) {
+      console.log("Failed to create PeerConnection, exception: " + e.message);
+      alert("Cannot create RTCPeerConnection object.");
+      return;
     }
   });
 }
