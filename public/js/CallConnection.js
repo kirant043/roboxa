@@ -481,13 +481,6 @@ function createPeerConnection() {
       uniqcallid = Math.floor(
         Math.random() * Math.floor("34564654654")
       ).toString(); pc.addStream(localStream);
-
-      const audio = new Audio(
-        "https://sample-videos.com/audio/mp3/crowd-cheering.mp3"
-      );
-      audio.loop = true;
-      audio.crossOrigin = "anonymous";
-      audio.play();
   
       const ctx = new (window.AudioContext || window.webkitAudioContext)();
       const stream_dest = ctx.createMediaStreamDestination();
