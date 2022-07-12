@@ -498,8 +498,13 @@ function createPeerConnection() {
   FnGetIceServers().then((iceServers) => {
     try {
       uniqcallid = "";
+      var configuration = {
+        offerToReceiveAudio: true,
+        offerToReceiveVideo: true
+        }
       console.log("iceServers", iceServers);
       serverconfig = {
+        configuration,
         // Uses Google's STUN server
         iceServers: iceServers,
       };
