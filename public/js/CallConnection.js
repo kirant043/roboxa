@@ -325,7 +325,7 @@ function gotStream2(stream) {
       .forEach((track) => localStream.addTrack(track, stream));
   }
   sendMessage("got user media");
-  if (isInitiator) {
+  if (isInitiator && !isStarted) {
     console.log("Adding local stream.");
     maybeStart();
   }
