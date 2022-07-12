@@ -573,7 +573,7 @@ function onCreateSessionDescriptionError(error) {
 }
 
 function handleRemoteStreamAdded(event) {
-  console.log("Remote stream added.");
+  console.log("Remote stream added.", event);
 
   remoteStream = event.streams[0];
 
