@@ -510,11 +510,7 @@ function createPeerConnection() {
       };
       console.log("serverconfig", serverconfig);
       pc = new RTCPeerConnection(serverconfig);
-      pc.onaddstream = handleRemoteStreamAdded;
-      pc.onicecandidate = handleIceCandidate;
-      pc.addStream = handleRemoteStreamAdded;
       pc.addEventListener('track', handleRemoteStreamAdded);
-      pc.onremovestream = handleRemoteStreamRemoved;
       console.log("Created RTCPeerConnnection");
       $("#allbuttonvideo").show();
 
