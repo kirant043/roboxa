@@ -451,11 +451,7 @@ function maybeStart() {
   ) {
     //  console.log('>>>>>> creating peer connection');
     createPeerConnection();
-   
 
-    if (isInitiator) {
-      doCall();
-    }
   }
 }
 
@@ -516,6 +512,9 @@ function createPeerConnection() {
       // globalsstream = pc.addTrack(track, localStream);
   
       isStarted = true;
+      if (isInitiator) {
+        doCall();
+      }
     } catch (e) {
       console.log("Failed to create PeerConnection, exception: " + e.message);
       alert("Cannot create RTCPeerConnection object.");
