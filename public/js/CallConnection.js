@@ -510,7 +510,7 @@ function createPeerConnection() {
         const [remoteStream] = event.streams;
         remoteVideo.srcObject = remoteStream;
     });
-      pc.onicecandidate = handleIceCandidate;
+      pc.onaddstream = handleIceCandidate;
       pc.ontrack = handleRemoteStreamAdded;
       pc.onremovestream = handleRemoteStreamRemoved;
       console.log("Created RTCPeerConnnection");
@@ -574,7 +574,7 @@ function onCreateSessionDescriptionError(error) {
 function handleRemoteStreamAdded(event) {
   console.log("Remote stream added.");
 
-  remoteStream = event.streams[0];
+  remoteStream = event.stream;
 
   // window.stream used for recording call
   window.stream = remoteStream;
