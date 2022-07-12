@@ -573,7 +573,7 @@ function onCreateSessionDescriptionError(error) {
 }
 
 function handleRemoteStreamAdded(ev) {
-    console.log("Remote stream added.", ev, ev.streams[0]);
+    console.log("Remote stream added.");
     if (ev.streams && ev.streams[0]) {
         remoteVideo.srcObject = ev.streams[0];
         remoteStream = ev;
