@@ -505,6 +505,11 @@ function createPeerConnection() {
       };
       console.log("serverconfig", serverconfig);
       pc = new RTCPeerConnection(serverconfig);
+      pc.addEventListener('track', async (event) => {
+        console.log('adding remote track');
+        const [remoteStream] = event.streams;
+        remoteVideo.srcObject = remoteStream;
+    });
       pc.onicecandidate = handleIceCandidate;
       pc.ontrack = handleRemoteStreamAdded;
       pc.onremovestream = handleRemoteStreamRemoved;
