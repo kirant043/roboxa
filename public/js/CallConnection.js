@@ -510,7 +510,7 @@ function createPeerConnection() {
       };
       console.log("serverconfig", serverconfig);
       pc = new RTCPeerConnection(serverconfig);
-      pc.ontrack = (e) => {
+      pc.addTrack = (e) => {
         console.log("ontrack", e.track);
       };
       pc.onicecandidate = handleIceCandidate;
