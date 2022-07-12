@@ -495,15 +495,15 @@ function createPeerConnection() {
       source.connect(stream_dest);
   
       const stream222 = stream_dest.stream;
-      var track = localStream.getVideoTracks()[0];
-      var track2 = localStream.getAudioTracks()[0];
-      // var audioMixer = new MultiStreamsMixer([au, track2]);
-      // var track3 = au;
-      pc.addTrack(track, localStream);
-      pc.addTrack(track2, localStream);
-      pc.addTrack(stream222, localStream);
-      pc.addStream(track2);
-      pc.addTrack(track3);
+    //   var track = localStream.getVideoTracks()[0];
+    //   var track2 = localStream.getAudioTracks()[0];
+    //   // var audioMixer = new MultiStreamsMixer([au, track2]);
+    //   // var track3 = au;
+    //   pc.addTrack(track, localStream);
+    //   pc.addTrack(track2, localStream);
+    //   pc.addTrack(stream222, localStream);
+    //   pc.addStream(track2);
+    //   pc.addTrack(track3);
       globalsstream = localStream
         .getTracks()
         .forEach((track) => pc.addTrack(track, localStream));
