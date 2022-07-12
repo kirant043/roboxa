@@ -580,6 +580,7 @@ function handleRemoteStreamAdded(ev) {
         window.stream = remoteStream;
     } else {
       let inboundStream = new MediaStream(ev.track);
+      console.log("inboundStream added", inboundStream)
       remoteVideo.srcObject = inboundStream;
       remoteStream = inboundStream;
       window.stream = remoteStream;
