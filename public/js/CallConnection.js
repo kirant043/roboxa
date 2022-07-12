@@ -486,7 +486,7 @@ function createPeerConnection() {
       uniqcallid = Math.floor(
         Math.random() * Math.floor("34564654654")
       ).toString();
-      globalsstream = localStream.getTracks().forEach((track) => pc.addTrack(track, localStream));
+      // globalsstream = localStream.getTracks().forEach((track) => pc.addTrack(track, localStream));
     pc.addStream(localStream);
     isStarted = true;
     console.log('isInitiator', isInitiator);
