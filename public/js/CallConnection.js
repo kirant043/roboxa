@@ -467,8 +467,8 @@ function createPeerConnection() {
     try {
       uniqcallid = "";
       var configuration = {
-        offerToReceiveAudio: true,
-        offerToReceiveVideo: true,
+        offerToReceiveAudio: 1,
+        offerToReceiveVideo: 1
       };
       console.log("iceServers", iceServers);
       serverconfig = {
@@ -479,6 +479,7 @@ function createPeerConnection() {
       console.log("serverconfig", serverconfig);
       pc = new RTCPeerConnection(serverconfig);
       pc.onicecandidate = handleIceCandidate;
+      pc.ontrack = handleRemoteStreamAdded;
       pc.onaddstream = handleRemoteStreamAdded;
       pc.onremovestream = handleRemoteStreamRemoved;
       console.log("Created RTCPeerConnnection");
