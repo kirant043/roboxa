@@ -512,7 +512,7 @@ function createPeerConnection() {
     });
       pc.onicecandidate = handleIceCandidate;
       pc.ontrack = handleRemoteStreamAdded;
-      pc2.addEventListener('track', handleRemoteStreamAdded);
+      pc.addEventListener('track', handleRemoteStreamAdded);
       pc.onremovestream = handleRemoteStreamRemoved;
       console.log("Created RTCPeerConnnection");
       $("#allbuttonvideo").show();
