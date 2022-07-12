@@ -496,7 +496,6 @@ window.onbeforeunload = function () {
 
 function createPeerConnection() {
   FnGetIceServers().then((iceServers) => {
-    try {
       uniqcallid = "";
       var configuration = {
         offerToReceiveAudio: true,
@@ -520,11 +519,6 @@ function createPeerConnection() {
       globalsstream = localStream
         .getTracks()
         .forEach((track) => pc.addTrack(track, localStream));
-    } catch (e) {
-      console.log("Failed to create PeerConnection, exception: " + e.message);
-      alert("Cannot create RTCPeerConnection object.");
-      return;
-    }
   });
 }
 
