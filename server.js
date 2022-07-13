@@ -469,10 +469,9 @@ io.on("connection", function (socket) {
 
     log("Received request to create or join room " + room);
 
-    // var clientsInRoom = io.sockets.adapter.rooms[room];
-    var clientsInRoom = Object.fromEntries(io.sockets.adapter.rooms)[room];
+    var clientsInRoom = io.sockets.adapter.rooms[room];
     var numClients = clientsInRoom
-      ? 1
+      ? Object.keys(clientsInRoom.sockets).length
       : 0;
     log("Room " + room + " now has " + numClients + " client(s)");
     console.log("numClients", numClients)
