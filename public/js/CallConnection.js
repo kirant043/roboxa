@@ -527,16 +527,16 @@ function createPeerConnection() {
 }
 
 function handleIceCandidate(event) {
-  console.log('icecandidate event: ', event);
+  //   console.log('icecandidate event: ', event);
   if (event.candidate) {
     sendMessage({
-      type: 'candidate',
+      type: "candidate",
       label: event.candidate.sdpMLineIndex,
       id: event.candidate.sdpMid,
-      candidate: event.candidate.candidate
-    }, room);
+      candidate: event.candidate.candidate,
+    });
   } else {
-    console.log('End of candidates.');
+    console.log("End of candidates.");
   }
 }
 
