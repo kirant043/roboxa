@@ -277,12 +277,8 @@ function getUserMedia() {
       video: { width: 640, height: 360 },
     })
     .then(gotStream)
-    .catch(function (e) {
-      navigator.mediaDevices
-        .getUserMedia({
-          audio: true,
-        })
-        .then(gotStream2);
+    .catch(function(e) {
+      alert('getUserMedia() error: ' + e.name);
     });
 }
 
@@ -496,7 +492,6 @@ window.onbeforeunload = function () {
 function createPeerConnection() {
   try {
     uniqcallid = "";
-    console.log("iceServers", iceServers);
     serverconfig = {
       // Uses Google's STUN server
       iceServers: [
