@@ -506,6 +506,7 @@ function createPeerConnection() {
       pc = new RTCPeerConnection(serverconfig);
 
       pc.onicecandidate = handleIceCandidate;
+      pc.ontrack = handleRemoteStreamAdded;
       pc.onaddstream = handleRemoteStreamAdded;
       pc.onremovestream = handleRemoteStreamRemoved;
       console.log("Created RTCPeerConnnection");
