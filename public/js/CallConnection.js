@@ -441,7 +441,7 @@ var constraints = {
 //     //}
 var globalsstream = "";
 function maybeStart() {
-  //console.log('>>>>>>> maybeStart() ', isStarted, localStream, isChannelReady);
+  console.log('>>>>>>> maybeStart() ', isStarted, localStream, isChannelReady);
   if (
     !isStarted &&
     typeof localStream !== "undefined" &&
