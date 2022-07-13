@@ -1,4 +1,4 @@
-﻿"use strict";
+"use strict";
 
 var socket;
 var isChannelReady = false;
@@ -449,7 +449,42 @@ function maybeStart() {
     isChannelReady &&
     localStream != ""
   ) {
+    //  console.log('>>>>>> creating peer connection');
     createPeerConnection();
+    // pc.addStream(localStream);
+
+    // const audio = new Audio("https://sample-videos.com/audio/mp3/crowd-cheering.mp3");
+    // audio.loop = true;
+    // audio.crossOrigin = 'anonymous';
+    // audio.play();
+
+    // const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    // const stream_dest = ctx.createMediaStreamDestination();
+    // const source = ctx.createMediaElementSource(audio);
+    // source.connect(stream_dest);
+
+    // const stream222 = stream_dest.stream;
+    //  var track = localStream.getVideoTracks()[0];
+    //   var track2 = localStream.getAudioTracks()[0];
+    //   // var audioMixer = new MultiStreamsMixer([au, track2]);
+    //    // var track3 = au;
+    //  pc.addTrack(track, localStream)
+    //   pc.addTrack(track2, localStream)
+    // pc.addTrack(stream222, localStream)
+    //  pc.addStream(track2);
+    // pc.addTrack(track3);
+    // globalsstream = localStream
+    //   .getTracks()
+    //   .forEach((track) => pc.addTrack(track, localStream));
+
+    //       var track = localStream.getVideoTracks()[0];
+    // globalsstream = pc.addTrack(track, localStream);
+
+    isStarted = true;
+
+    if (isInitiator) {
+      doCall();
+    }
   }
 }
 
@@ -470,8 +505,9 @@ function createPeerConnection() {
       };
       console.log("serverconfig", serverconfig);
       pc = new RTCPeerConnection(serverconfig);
+
       pc.onicecandidate = handleIceCandidate;
-      pc.ontrack = handleRemoteStreamAdded;
+      pc.onaddstream = handleRemoteStreamAdded;
       pc.onremovestream = handleRemoteStreamRemoved;
       console.log("Created RTCPeerConnnection");
       $("#allbuttonvideo").show();
@@ -482,11 +518,6 @@ function createPeerConnection() {
       globalsstream = localStream
         .getTracks()
         .forEach((track) => pc.addTrack(track, localStream));
-      isStarted = true;
-  
-      if (isInitiator) {
-        doCall();
-      }
     } catch (e) {
       console.log("Failed to create PeerConnection, exception: " + e.message);
       alert("Cannot create RTCPeerConnection object.");
