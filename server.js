@@ -472,7 +472,7 @@ io.on("connection", function (socket) {
     // var clientsInRoom = io.sockets.adapter.rooms[room];
     var clientsInRoom = Object.fromEntries(io.sockets.adapter.rooms)[room];
     var numClients = clientsInRoom
-      ? Object.keys(clientsInRoom.sockets).length
+      ? 1
       : 0;
     log("Room " + room + " now has " + numClients + " client(s)");
     console.log("numClients", numClients)
