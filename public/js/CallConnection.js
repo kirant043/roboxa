@@ -441,7 +441,7 @@ var constraints = {
 //     //}
 var globalsstream = "";
 function maybeStart() {
-  console.log('>>>>>>> maybeStart() ', isStarted, localStream, isChannelReady);
+  //console.log('>>>>>>> maybeStart() ', isStarted, localStream, isChannelReady);
   if (
     !isStarted &&
     typeof localStream !== "undefined" &&
@@ -504,7 +504,7 @@ function createPeerConnection() {
       };
       console.log("serverconfig", serverconfig);
       pc = new RTCPeerConnection(serverconfig);
-
+      
       pc.onicecandidate = handleIceCandidate;
       pc.onaddstream = handleRemoteStreamAdded;
       pc.onremovestream = handleRemoteStreamRemoved;
@@ -515,8 +515,8 @@ function createPeerConnection() {
         Math.random() * Math.floor("34564654654")
       ).toString();
       globalsstream = localStream
-        .getTracks()
-        .forEach((track) => pc.addTrack(track, localStream));
+      .getTracks()
+      .forEach((track) => pc.addTrack(track, localStream));
     } catch (e) {
       console.log("Failed to create PeerConnection, exception: " + e.message);
       alert("Cannot create RTCPeerConnection object.");
