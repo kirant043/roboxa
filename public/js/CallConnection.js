@@ -278,7 +278,7 @@ function getUserMedia() {
     })
     .then(gotStream)
     .catch(function(e) {
-      alert('getUserMedia() error: ' + e.name);
+      console.log('getUserMedia() error: ' + e);
     });
 }
 
