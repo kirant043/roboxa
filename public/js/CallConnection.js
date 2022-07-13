@@ -284,6 +284,7 @@ function getUserMedia() {
         })
         .then(gotStream2);
     });
+    createPeerConnection()
 }
 
 function whiteNoise() {
