@@ -494,35 +494,49 @@ window.onbeforeunload = function () {
 /////////////////////////////////////////////////////////
 
 function createPeerConnection() {
-  FnGetIceServers().then((iceServers) => {
-    try {
-      uniqcallid = "";
-      console.log("iceServers", iceServers);
-      serverconfig = {
-        // Uses Google's STUN server
-        iceServers: iceServers,
-      };
-      console.log("serverconfig", serverconfig);
-      pc = new RTCPeerConnection(serverconfig);
-      
-      pc.onicecandidate = handleIceCandidate;
-      pc.onaddstream = handleRemoteStreamAdded;
-      pc.onremovestream = handleRemoteStreamRemoved;
-      console.log("Created RTCPeerConnnection");
-      $("#allbuttonvideo").show();
+  try {
+    uniqcallid = "";
+    console.log("iceServers", iceServers);
+    serverconfig = {
+      // Uses Google's STUN server
+      iceServers: [
+        {
+          urls: ["stun:s3.xirsys.com"],
+        },
+        {
+          username: "52924132-59a0-11e8-b2c1-4ba290c8c0a3",
+          credential: "529241e6-59a0-11e8-a048-17ad96ba1721",
+          urls: [
+            "turn:s3.xirsys.com:80?transport=udp",
+            "turn:s3.xirsys.com:3478?transport=udp",
+            "turn:s3.xirsys.com:80?transport=tcp",
+            "turn:s3.xirsys.com:3478?transport=tcp",
+            "turns:s3.xirsys.com:443?transport=tcp",
+            "turns:s3.xirsys.com:5349?transport=tcp",
+          ],
+        },
+      ],
+    };
+    console.log("serverconfig", serverconfig);
+    pc = new RTCPeerConnection(serverconfig);
+    
+    pc.onicecandidate = handleIceCandidate;
+    pc.onaddstream = handleRemoteStreamAdded;
+    pc.onremovestream = handleRemoteStreamRemoved;
+    console.log("Created RTCPeerConnnection");
+    $("#allbuttonvideo").show();
 
-      uniqcallid = Math.floor(
-        Math.random() * Math.floor("34564654654")
-      ).toString();
-      globalsstream = localStream
-      .getTracks()
-      .forEach((track) => pc.addTrack(track, localStream));
-    } catch (e) {
-      console.log("Failed to create PeerConnection, exception: " + e.message);
-      alert("Cannot create RTCPeerConnection object.");
-      return;
-    }
-  });
+    uniqcallid = Math.floor(
+      Math.random() * Math.floor("34564654654")
+    ).toString();
+    globalsstream = localStream
+    .getTracks()
+    .forEach((track) => pc.addTrack(track, localStream));
+  } catch (e) {
+    console.log("Failed to create PeerConnection, exception: " + e.message);
+    alert("Cannot create RTCPeerConnection object.");
+    return;
+  }
 }
 
 function handleIceCandidate(event) {
