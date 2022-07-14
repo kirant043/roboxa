@@ -181,10 +181,10 @@ socket.emit("setUserId", ResToSetUserId);
 socket.on("connect", function () {
   console.log("connected" + socket.id);
 });
-socket.on("disconnect", function () {
-  console.log("Socket disconnected")
-  logout();
-});
+// socket.on("disconnect", function () {
+//   console.log("Socket disconnected")
+//   logout();
+// });
 function removefilesingle(id) {
   $("#fileup" + id).remove();
   rams.splice(id, 1);
