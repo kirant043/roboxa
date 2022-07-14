@@ -43,17 +43,17 @@ require("./app/routes.js")(app);
 app.set("port", process.env.PORT || 80); //4063
 app.set("host", process.env.HOST || "https://nsbluescope.roboxatech.com");
 
-http.createServer(app).listen(4028, function () {
-  console.log(
-    "Express server listening on port " +
-      app.get("host") +
-      ":" +
-      app.get("port")
-  );
-});
+// http.createServer(app).listen(4028, function () {
+//   console.log(
+//     "Express server listening on port " +
+//       app.get("host") +
+//       ":" +
+//       app.get("port")
+//   );
+// });
 
-var server = app.listen(PORT, function () {
-  console.log(`${config.NODE_ENV} server listening on port ` + PORT);
+var server = app.listen(config.PORT, function () {
+  console.log(`${config.NODE_ENV} server listening on port ` + config.PORT);
 });
 
 const io = require("socket.io")(server);
