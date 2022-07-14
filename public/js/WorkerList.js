@@ -182,6 +182,7 @@ socket.on("connect", function () {
   console.log("connected" + socket.id);
 });
 socket.on("disconnect", function () {
+  console.log("Socket disconnected")
   logout();
 });
 function removefilesingle(id) {
