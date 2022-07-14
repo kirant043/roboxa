@@ -66,11 +66,6 @@ socket.on("connect", function () {
   // socket.emit('setUserId', ResToSetUserId);
   console.log("emitting getonline users");
   socket.emit("GetOnlineUsers");
-  var leaveRoom = {
-    room: calleridfordocsave + getCookie("user_id"),
-  };
-
-  socket.emit("leaveGroup", leaveRoom);
 
   if (callerbusy) {
     var roomidd = {
