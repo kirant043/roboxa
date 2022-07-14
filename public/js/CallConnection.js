@@ -1,4 +1,4 @@
-﻿'use strict';
+﻿"use strict";
 var socket;
 var isChannelReady = false;
 var isInitiator = false;
@@ -11,44 +11,44 @@ var call_start_date_time = Date();
 var call_end_date_time = Date();
 var call_type = "";
 var callrcvdar = [];
-var uniqcallid = '';
-var isShredoc = "0"
-var isShreevidence = "0"
+var uniqcallid = "";
+var isShredoc = "0";
+var isShreevidence = "0";
 var calltimercheck = "0";
 var pcConfig = {
-    'iceServers': [{
-        'urls': 'stun:stun:s3.xirsys.com'
-
-    }]
+  iceServers: [
+    {
+      urls: "stun:stun:s3.xirsys.com",
+    },
+  ],
 };
 
 var callerbusy = false;
 
 var serverconfig = {
-    // Uses Google's STUN server
-    'sdpSemantics': 'unified-plan',
-    'iceServers': [{
-        "urls": "stun:s3.xirsys.com"
-    }, {
-        "urls": [
-            "turn:s3.xirsys.com:80?transport=udp",
-            "turn:s3.xirsys.com:3478?transport=udp",
-            "turn:s3.xirsys.com:80?transport=tcp",
-            "turn:s3.xirsys.com:3478?transport=tcp"
-
-
-        ],
-        "username": "52924132-59a0-11e8-b2c1-4ba290c8c0a3",
-        "credential": "529241e6-59a0-11e8-a048-17ad96ba1721"
-    }]
+  // Uses Google's STUN server
+  sdpSemantics: "unified-plan",
+  iceServers: [
+    {
+      urls: "stun:s3.xirsys.com",
+    },
+    {
+      urls: [
+        "turn:s3.xirsys.com:80?transport=udp",
+        "turn:s3.xirsys.com:3478?transport=udp",
+        "turn:s3.xirsys.com:80?transport=tcp",
+        "turn:s3.xirsys.com:3478?transport=tcp",
+      ],
+      username: "52924132-59a0-11e8-b2c1-4ba290c8c0a3",
+      credential: "529241e6-59a0-11e8-a048-17ad96ba1721",
+    },
+  ],
 };
-
-
 
 // Set up audio and video regardless of what devices are present.
 var sdpConstraints = {
-    offerToReceiveAudio: true,
-    offerToReceiveVideo: true
+  offerToReceiveAudio: true,
+  offerToReceiveVideo: true,
 };
 
 /////////////////////////////////////////////
@@ -58,285 +58,256 @@ var sdpConstraints = {
 
 socket = io.connect(chatServerUrl);
 
-socket.on('connect', function () {
-    console.log(socket , chatServerUrl , 'connected to socket.io')
-    // var ResToSetUserId = {
-    //     'user_id': getCookie("user_id")
-    // };
-    // socket.emit('setUserId', ResToSetUserId);
-    console.log('emitting getonline users')
-    socket.emit('GetOnlineUsers');
+socket.on("connect", function () {
+  console.log(socket, chatServerUrl, "connected to socket.io");
+  // var ResToSetUserId = {
+  //     'user_id': getCookie("user_id")
+  // };
+  // socket.emit('setUserId', ResToSetUserId);
+  console.log("emitting getonline users");
+  socket.emit("GetOnlineUsers");
 
-    if (callerbusy) {
+  if (callerbusy) {
+    var roomidd = {
+      roomid: calleridfordocsave + getCookie("user_id"),
+    };
 
+    var argcallonline = {
+      u_id: getCookie("user_id"),
+      o_id: calleridfordocsave,
+    };
+    socket.emit("usergoonlineoncall", argcallonline);
+    socket.emit("rejoinroom", roomidd);
+  }
+});
 
-        var roomidd = {
-            'roomid': calleridfordocsave + getCookie("user_id")
+socket.on("userLoggedIn", function () {
+  console.log("Connected User is Valid");
+});
+socket.on("usergoonlineoncall", function () {
+  if (callerbusy) {
+    $("#reconnectvideocall").attr("style", "");
+  }
+});
+socket.on("usergoofflineoncall", function () {
+  if (callerbusy) {
+    $("#reconnectvideocall").attr("style", "");
+    $("#reconnectvideocall").attr(
+      "style",
+      "background: url('images/reconnecting_user.gif');"
+    );
+    setTimeout(function () {
+      var forroom = {
+        room: calleridfordocsave,
+        message: "bye",
+      };
+
+      // console.log('Client  ', forroom);
+      socket.emit("message", forroom);
+      clearTime();
+      callerbusy = false;
+      isInitiator = false;
+      isStarted = false;
+      isChannelReady = false;
+      pc.close();
+
+      $("#screenshotvideocanvas").hide();
+      $("#screenshotvideo").hide();
+      $("#allbuttonvideo").hide();
+      $("#localVideo").hide();
+      $("#remoteVideo").hide();
+      $("#vZoomScrollNav").hide();
+      $("#video-data").hide();
+      $("#caldivshow").hide();
+      var request = JSON.stringify({
+        user_id: getCookie("user_id"),
+        other_user_id: calleridfordocsave,
+      });
+      var leaveRoom = {
+        room: calleridfordocsave + getCookie("user_id"),
+      };
+
+      socket.emit("leaveGroup", leaveRoom);
+
+      // stop call recording
+      if (isCallRecording) {
+        $("#recordCallToggle").parent().click();
+      }
+
+      stopcalllpeer();
+
+      call_end_date_time = Date();
+      var startDate = call_start_date_time.toString();
+      var endDate = call_end_date_time.toString();
+
+      var CallData2 = "";
+      if (call_type == "incoming") {
+        console.log(callrcvdar.name);
+        CallData2 = {
+          user_id: calleridfordocsave,
+          other_user_id: getCookie("user_id"),
+          full_name: callrcvdar.name,
+          glass_id: callrcvdar.glass_id,
+          location: callrcvdar.location,
+          callid: uniqcallid,
         };
+      } else {
+        console.log("callrcvdar.name");
+        CallData2 = {
+          user_id: getCookie("user_id"),
+          other_user_id: calleridfordocsave,
+          full_name: globalcalldata.name,
+          glass_id: globalcalldata.glass_id,
+          location: globalcalldata.location,
+          callid: uniqcallid,
+        };
+      }
+      $("#reconnectvideocall").attr("style", "");
 
-        var argcallonline = {
-            u_id: getCookie("user_id"),
-            o_id: calleridfordocsave
-        }
-        socket.emit('usergoonlineoncall', argcallonline);
-        socket.emit('rejoinroom', roomidd);
+      FnSaveCallDetail(startDate, endDate, call_type, CallData2);
+      FnGetReciveCalls();
 
-    }
-
+      localStream.getAudioTracks()[0].stop();
+      localStream.getVideoTracks()[0].stop();
+      localstaream = "";
+      remoteStream = "";
+      remoteVideo.srcObject = null;
+    }, 20000);
+  }
 });
 
-socket.on('userLoggedIn', function(){
-    console.log("Connected User is Valid");
-});
-socket.on('usergoonlineoncall', function () {
-    if (callerbusy) {
+socket.on("disconnect", function () {
+  for (var i = 0; i < workerListIds.length; i++) {
+    $("#" + workerListIds[i]).attr("disabled", "disabled");
+  }
 
+  if (callerbusy) {
+    $("#reconnectvideocall").attr("style", "");
+    $("#reconnectvideocall").attr(
+      "style",
+      "background: url('images/reconnecting_user.gif');"
+    );
+    setTimeout(function () {
+      var forroom = {
+        room: calleridfordocsave,
+        message: "bye",
+      };
 
-        $("#reconnectvideocall").attr("style", "");
+      // console.log('Client  ', forroom);
+      socket.emit("message", forroom);
+      clearTime();
+      callerbusy = false;
+      isInitiator = false;
+      isStarted = false;
+      isChannelReady = false;
+      pc.close();
 
-    }
-});
-socket.on('usergoofflineoncall', function () {
+      $("#screenshotvideocanvas").hide();
+      $("#screenshotvideo").hide();
+      $("#allbuttonvideo").hide();
+      $("#localVideo").hide();
+      $("#remoteVideo").hide();
+      $("#vZoomScrollNav").hide();
+      $("#video-data").hide();
+      $("#caldivshow").hide();
+      var request = JSON.stringify({
+        user_id: getCookie("user_id"),
+        other_user_id: calleridfordocsave,
+      });
+      var leaveRoom = {
+        room: calleridfordocsave + getCookie("user_id"),
+      };
 
-    if (callerbusy) {
-        $("#reconnectvideocall").attr("style", "");
-        $("#reconnectvideocall").attr("style", "background: url('images/reconnecting_user.gif');")
-        setTimeout(function () {
+      socket.emit("leaveGroup", leaveRoom);
 
-            var forroom = {
-                'room': calleridfordocsave,
-                'message': "bye"
-            };
+      // stop call recording
+      if (isCallRecording) {
+        $("#recordCallToggle").parent().click();
+      }
 
-            // console.log('Client  ', forroom);
-            socket.emit('message', forroom);
-            clearTime();
-            callerbusy = false;
-            isInitiator = false;
-            isStarted = false;
-            isChannelReady = false;
-            pc.close();
+      stopcalllpeer();
 
-            $("#screenshotvideocanvas").hide()
-            $("#screenshotvideo").hide()
-            $("#allbuttonvideo").hide()
-            $('#localVideo').hide();
-            $('#remoteVideo').hide();
-            $('#vZoomScrollNav').hide();
-            $('#video-data').hide();
-            $('#caldivshow').hide();
-            var request = JSON.stringify({
-                "user_id": getCookie("user_id"),
-                "other_user_id": calleridfordocsave,
-            });
-            var leaveRoom = {
-                'room': calleridfordocsave + getCookie("user_id"),
-            };
+      call_end_date_time = Date();
+      var startDate = call_start_date_time.toString();
+      var endDate = call_end_date_time.toString();
 
-            socket.emit('leaveGroup', leaveRoom);
+      var CallData2 = "";
+      if (call_type == "incoming") {
+        console.log(callrcvdar.name);
+        CallData2 = {
+          user_id: calleridfordocsave,
+          other_user_id: getCookie("user_id"),
+          full_name: callrcvdar.name,
+          glass_id: callrcvdar.glass_id,
+          location: callrcvdar.location,
+          callid: uniqcallid,
+        };
+      } else {
+        console.log("callrcvdar.name");
+        CallData2 = {
+          user_id: getCookie("user_id"),
+          other_user_id: calleridfordocsave,
+          full_name: globalcalldata.name,
+          glass_id: globalcalldata.glass_id,
+          location: globalcalldata.location,
+          callid: uniqcallid,
+        };
+      }
+      $("#reconnectvideocall").attr("style", "");
 
-            // stop call recording
-            if(isCallRecording){
-                $("#recordCallToggle").parent().click();
-            }
+      FnSaveCallDetail(startDate, endDate, call_type, CallData2);
+      FnGetReciveCalls();
 
-            stopcalllpeer()
-
-            call_end_date_time = Date();
-            var startDate = call_start_date_time.toString();
-            var endDate = call_end_date_time.toString();
-
-
-            var CallData2 = '';
-            if (call_type == "incoming") {
-
-                console.log(callrcvdar.name)
-                CallData2 = {
-                    'user_id': calleridfordocsave,
-                    "other_user_id": getCookie("user_id"),
-                    "full_name": callrcvdar.name,
-                    "glass_id": callrcvdar.glass_id,
-                    "location": callrcvdar.location,
-                    "callid": uniqcallid
-                };
-
-
-            } else {
-                console.log("callrcvdar.name")
-                CallData2 = {
-                    'user_id': getCookie("user_id"),
-                    "other_user_id": calleridfordocsave,
-                    "full_name": globalcalldata.name,
-                    "glass_id": globalcalldata.glass_id,
-                    "location": globalcalldata.location,
-                    "callid": uniqcallid
-                };
-
-
-            }
-            $("#reconnectvideocall").attr("style", "");
-
-            FnSaveCallDetail(startDate, endDate, call_type, CallData2);
-            FnGetReciveCalls();
-
-            localStream.getAudioTracks()[0].stop();
-            localStream.getVideoTracks()[0].stop();
-            localstaream = '';
-            remoteStream = '';
-            remoteVideo.srcObject = null;
-
-        }, 20000);
-
-    }
-
+      localStream.getAudioTracks()[0].stop();
+      localStream.getVideoTracks()[0].stop();
+      localstaream = "";
+      remoteStream = "";
+      remoteVideo.srcObject = null;
+    }, 20000);
+  }
 });
 
-
-
-socket.on('disconnect', function () {
-
-    for (var i = 0; i < workerListIds.length; i++) {
-
-        $("#" + workerListIds[i]).attr("disabled", "disabled");
-
-
-    }
-
-    if (callerbusy) {
-
-        $("#reconnectvideocall").attr("style", "");
-        $("#reconnectvideocall").attr("style", "background: url('images/reconnecting_user.gif');");
-        setTimeout(function () {
-
-            var forroom = {
-                'room': calleridfordocsave,
-                'message': "bye"
-            };
-
-            // console.log('Client  ', forroom);
-            socket.emit('message', forroom);
-            clearTime();
-            callerbusy = false;
-            isInitiator = false;
-            isStarted = false;
-            isChannelReady = false;
-            pc.close();
-
-            $("#screenshotvideocanvas").hide()
-            $("#screenshotvideo").hide()
-            $("#allbuttonvideo").hide()
-            $('#localVideo').hide();
-            $('#remoteVideo').hide();
-            $('#vZoomScrollNav').hide();
-            $('#video-data').hide();
-            $('#caldivshow').hide();
-            var request = JSON.stringify({
-                "user_id": getCookie("user_id"),
-                "other_user_id": calleridfordocsave,
-            });
-            var leaveRoom = {
-                'room': calleridfordocsave + getCookie("user_id"),
-            };
-
-            socket.emit('leaveGroup', leaveRoom);
-
-            // stop call recording
-            if(isCallRecording){
-                $("#recordCallToggle").parent().click();
-            }
-
-            stopcalllpeer()
-
-            call_end_date_time = Date();
-            var startDate = call_start_date_time.toString();
-            var endDate = call_end_date_time.toString();
-
-
-            var CallData2 = '';
-            if (call_type == "incoming") {
-
-                console.log(callrcvdar.name)
-                CallData2 = {
-                    'user_id': calleridfordocsave,
-                    "other_user_id": getCookie("user_id"),
-                    "full_name": callrcvdar.name,
-                    "glass_id": callrcvdar.glass_id,
-                    "location": callrcvdar.location,
-                    "callid": uniqcallid
-                };
-
-            } else {
-                console.log("callrcvdar.name")
-                CallData2 = {
-                    'user_id': getCookie("user_id"),
-                    "other_user_id": calleridfordocsave,
-                    "full_name": globalcalldata.name,
-                    "glass_id": globalcalldata.glass_id,
-                    "location": globalcalldata.location,
-                    "callid": uniqcallid
-                };
-
-
-            }
-            $("#reconnectvideocall").attr("style", "");
-
-            FnSaveCallDetail(startDate, endDate, call_type, CallData2);
-            FnGetReciveCalls();
-
-            localStream.getAudioTracks()[0].stop();
-            localStream.getVideoTracks()[0].stop();
-            localstaream = '';
-            remoteStream = '';
-            remoteVideo.srcObject = null;
-
-        }, 20000);
-
-    }
-});
-
-var localVideo = document.querySelector('#localVideo');
-var remoteVideo = document.querySelector('#remoteVideo');
+var localVideo = document.querySelector("#localVideo");
+var remoteVideo = document.querySelector("#remoteVideo");
 
 //  navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 
-function getUserMedia(){
-navigator.mediaDevices.getUserMedia({
-         audio: true,
-         //video:false
-         video: { width: 640, height: 360 }
+function getUserMedia() {
+  navigator.mediaDevices
+    .getUserMedia({
+      audio: true,
+      //video:false
+      video: { width: 640, height: 360 },
     })
-        .then(gotStream)
-        .catch(function (e) {
-               navigator.mediaDevices.getUserMedia({
-        audio: true
-         
-    })
+    .then(gotStream)
+    .catch(function (e) {
+      navigator.mediaDevices
+        .getUserMedia({
+          audio: true,
+        })
         .then(gotStream2)
         .catch(function (e) {
-             setTimeout(function(){ 
- localVideo.srcObject = whiteNoise();
-       localStream = whiteNoise();
-        sendMessage('got user media');
-        
-        if (isInitiator) {
-            console.log('Adding local stream.');
-          maybeStart();
-        }
+          setTimeout(function () {
+            localVideo.srcObject = whiteNoise();
+            localStream = whiteNoise();
+            console.log("catch got user media")
+            sendMessage("got user media");
 
-
-    }, 1500);
-           
+            if (isInitiator) {
+              console.log("Adding local stream.");
+              maybeStart();
+            }
+          }, 1500);
         });
-        });
-
+    });
 }
 
 function whiteNoise() {
-    var canvasasdsadsad = document.querySelector('#canvasdsdsdsds');
-  let ctx = canvasasdsadsad.getContext('2d');
+  var canvasasdsadsad = document.querySelector("#canvasdsdsdsds");
+  let ctx = canvasasdsadsad.getContext("2d");
   ctx.fillRect(0, 0, canvasasdsadsad.width, canvasasdsadsad.height);
   let p = ctx.getImageData(0, 0, canvasasdsadsad.width, canvasasdsadsad.height);
-  requestAnimationFrame(function draw(){
+  requestAnimationFrame(function draw() {
     for (var i = 0; i < p.data.length; i++) {
       p.data[i++] = p.data[i++] = p.data[i++] = Math.random() * 255;
     }
@@ -344,38 +315,39 @@ function whiteNoise() {
     requestAnimationFrame(draw);
   });
   return canvasasdsadsad.captureStream(60);
-};
-    
-
-    function gotStream(stream) {
-        console.log(stream);
-        localStream = stream;
-        localVideo.srcObject = stream;
-if(localStream.getVideoTracks().length==0){
-    whiteNoise().getTracks().forEach(track => localStream.addTrack(track, stream));
-     
-
 }
-        sendMessage('got user media');
-        if (isInitiator) {
-            console.log('Adding local stream.');
-          maybeStart();
-        }
-    }
-       function gotStream2(stream) {
-       localStream=stream;
-       localVideo.srcObject = stream;
-       if(localStream.getVideoTracks().length==0){
-    whiteNoise().getTracks().forEach(track => localStream.addTrack(track, stream));
-     
 
+function gotStream(stream) {
+  console.log(stream);
+  localStream = stream;
+  localVideo.srcObject = stream;
+  if (localStream.getVideoTracks().length == 0) {
+    whiteNoise()
+      .getTracks()
+      .forEach((track) => localStream.addTrack(track, stream));
+  }
+  console.log("gotStream got user media")
+  sendMessage("got user media");
+  if (isInitiator) {
+    console.log("Adding local stream.");
+    maybeStart();
+  }
 }
-        sendMessage('got user media');
-        if (isInitiator) {
-            console.log('Adding local stream.');
-          maybeStart();
-        }
-    }
+function gotStream2(stream) {
+  localStream = stream;
+  localVideo.srcObject = stream;
+  if (localStream.getVideoTracks().length == 0) {
+    whiteNoise()
+      .getTracks()
+      .forEach((track) => localStream.addTrack(track, stream));
+  }
+  console.log("gotStream2 got user media")
+  sendMessage("got user media");
+  if (isInitiator) {
+    console.log("Adding local stream.");
+    maybeStart();
+  }
+}
 
 // navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
 
@@ -394,7 +366,6 @@ if(localStream.getVideoTracks().length==0){
 
 // }
 
-
 // function gotStream(stream) {
 
 //     localStream = stream;
@@ -410,80 +381,70 @@ if(localStream.getVideoTracks().length==0){
 let oncallwith;
 
 function createOrJoin(user_id, other_user_id) {
-    // added global holder for other user id
-    oncallwith = other_user_id;
+  // added global holder for other user id
+  oncallwith = other_user_id;
 
-    var room = other_user_id + user_id;
-    if (room !== '') {
-        socket.emit('create or join', room);
-        console.log('Attempted to create or  join room', room);
-    }
+  var room = other_user_id + user_id;
+  if (room !== "") {
+    socket.emit("create or join", room);
+    console.log("Attempted to create or  join room", room);
+  }
 
-    socket.on('created', function (room) {
-        console.log('Created room ' + room);
-        isInitiator = true;
-    });
+  socket.on("created", function (room) {
+    console.log("Created room " + room);
+    isInitiator = true;
+  });
 
-    socket.on('full', function (room) {
-        console.log('Room ' + room + ' is full');
-    });
+  socket.on("full", function (room) {
+    console.log("Room " + room + " is full");
+  });
 
-    socket.on('join', function (room) {
-        console.log('Another peer made a request to join room ' + room);
-        console.log('This peer is the initiator of room ' + room + '!');
-        isChannelReady = true;
+  socket.on("join", function (room) {
+    console.log("Another peer made a request to join room " + room);
+    console.log("This peer is the initiator of room " + room + "!");
+    isChannelReady = true;
+  });
 
-    });
+  socket.on("joined", function (room) {
+    console.log("joined: " + room);
 
-    socket.on('joined', function (room) {
-        console.log('joined: ' + room);
+    isChannelReady = true;
+  });
 
-        isChannelReady = true;
-    });
+  socket.on("log", function (array) {
+    console.log.apply(console, array);
+  });
 
-    socket.on('log', function (array) {
-        console.log.apply(console, array);
-    });
-
-    getUserMedia()
-
+  getUserMedia();
 }
 
-
-
-socket.on('message', function (message) {
-
-    console.log('Client received message:', message);
-    if (message.type === 'offer') {
-        if (!isInitiator && !isStarted) {
-            maybeStart();
-        }
-        pc.setRemoteDescription(new RTCSessionDescription(message));
-        doAnswer();
-    } else if (message.type === 'answer' && isStarted) {
-        pc.setRemoteDescription(new RTCSessionDescription(message));
-    } else if (message.type === 'candidate' && isStarted) {
-        var candidate = new RTCIceCandidate({
-            sdpMLineIndex: message.label,
-            candidate: message.candidate
-
-        });
-
-        pc.addIceCandidate(candidate);
-    } else if (message === 'bye' && isStarted) {
-        handleRemoteHangup();
+socket.on("message", function (message) {
+  console.log("Client received message:", message);
+  if (message.type === "offer") {
+    if (!isInitiator && !isStarted) {
+      maybeStart();
     }
-});
+    pc.setRemoteDescription(new RTCSessionDescription(message));
+    doAnswer();
+  } else if (message.type === "answer" && isStarted) {
+    pc.setRemoteDescription(new RTCSessionDescription(message));
+  } else if (message.type === "candidate" && isStarted) {
+    var candidate = new RTCIceCandidate({
+      sdpMLineIndex: message.label,
+      candidate: message.candidate,
+    });
 
+    pc.addIceCandidate(candidate);
+  } else if (message === "bye" && isStarted) {
+    handleRemoteHangup();
+  }
+});
 
 ////////////////////////////////////////////////////
 
-
-
-
 var constraints = {
-    audio: true,
-    video: true
+  audio: true,
+  video: true,
 };
 
 //     //console.log('Getting user media with constraints', constraints);
@@ -496,253 +457,254 @@ var constraints = {
 // //  'https://service.xirsys.com/ice?ident=abhay0648&secret=1a51b0b4-329f-11e8-9660-8d907ccd5eed&domain=www.vivekc.xyz&application=default&room=testing&secure=1'
 //     );
 //     //}
-var globalsstream='';
+var globalsstream = "";
 function maybeStart() {
-    //console.log('>>>>>>> maybeStart() ', isStarted, localStream, isChannelReady);
-    if (!isStarted && typeof localStream !== 'undefined' && isChannelReady && localStream != '') {
-        //  console.log('>>>>>> creating peer connection');
-        createPeerConnection();
-        // pc.addStream(localStream);
+  //console.log('>>>>>>> maybeStart() ', isStarted, localStream, isChannelReady);
+  if (
+    !isStarted &&
+    typeof localStream !== "undefined" &&
+    isChannelReady &&
+    localStream != ""
+  ) {
+    //  console.log('>>>>>> creating peer connection');
+    createPeerConnection();
+    // pc.addStream(localStream);
 
+    // const audio = new Audio("https://sample-videos.com/audio/mp3/crowd-cheering.mp3");
+    // audio.loop = true;
+    // audio.crossOrigin = 'anonymous';
+    // audio.play();
 
-// const audio = new Audio("https://sample-videos.com/audio/mp3/crowd-cheering.mp3");
-// audio.loop = true;
-// audio.crossOrigin = 'anonymous';
-// audio.play();
+    // const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    // const stream_dest = ctx.createMediaStreamDestination();
+    // const source = ctx.createMediaElementSource(audio);
+    // source.connect(stream_dest);
 
-// const ctx = new (window.AudioContext || window.webkitAudioContext)();
-// const stream_dest = ctx.createMediaStreamDestination();
-// const source = ctx.createMediaElementSource(audio);
-// source.connect(stream_dest);
-
-// const stream222 = stream_dest.stream;
-//  var track = localStream.getVideoTracks()[0];
-//   var track2 = localStream.getAudioTracks()[0];
-//   // var audioMixer = new MultiStreamsMixer([au, track2]);
-//    // var track3 = au;
-//  pc.addTrack(track, localStream)
-//   pc.addTrack(track2, localStream)
+    // const stream222 = stream_dest.stream;
+    //  var track = localStream.getVideoTracks()[0];
+    //   var track2 = localStream.getAudioTracks()[0];
+    //   // var audioMixer = new MultiStreamsMixer([au, track2]);
+    //    // var track3 = au;
+    //  pc.addTrack(track, localStream)
+    //   pc.addTrack(track2, localStream)
     // pc.addTrack(stream222, localStream)
-   //  pc.addStream(track2);
+    //  pc.addStream(track2);
     // pc.addTrack(track3);
-        globalsstream=localStream.getTracks().forEach(track => pc.addTrack(track, localStream));
+    globalsstream = localStream
+      .getTracks()
+      .forEach((track) => pc.addTrack(track, localStream));
 
-  //       var track = localStream.getVideoTracks()[0];
-  // globalsstream = pc.addTrack(track, localStream);
+    //       var track = localStream.getVideoTracks()[0];
+    // globalsstream = pc.addTrack(track, localStream);
 
-        isStarted = true;
+    isStarted = true;
 
-        if (isInitiator) {
-            doCall();
-        }
+    if (isInitiator) {
+      doCall();
     }
+  }
 }
 
 window.onbeforeunload = function () {
-    sendMessage('bye');
+  sendMessage("bye");
 };
 
 /////////////////////////////////////////////////////////
 
 function createPeerConnection() {
-    try {
-        uniqcallid = "";
-        pc = new RTCPeerConnection(serverconfig);
-        pc.onicecandidate = handleIceCandidate;
-        pc.ontrack = handleRemoteStreamAdded;
-        pc.onremovestream = handleRemoteStreamRemoved;
-        console.log('Created RTCPeerConnnection');
-        $("#allbuttonvideo").show()
+  try {
+    uniqcallid = "";
+    pc = new RTCPeerConnection(serverconfig);
+    pc.onicecandidate = handleIceCandidate;
+    pc.ontrack = handleRemoteStreamAdded;
+    pc.onremovestream = handleRemoteStreamRemoved;
+    console.log("Created RTCPeerConnnection");
+    $("#allbuttonvideo").show();
 
-        uniqcallid = Math.floor(Math.random() * Math.floor("34564654654")).toString();
-    } catch (e) {
-        console.log('Failed to create PeerConnection, exception: ' + e.message);
-        alert('Cannot create RTCPeerConnection object.');
-        return;
-    }
+    uniqcallid = Math.floor(
+      Math.random() * Math.floor("34564654654")
+    ).toString();
+  } catch (e) {
+    console.log("Failed to create PeerConnection, exception: " + e.message);
+    alert("Cannot create RTCPeerConnection object.");
+    return;
+  }
 }
 
 function handleIceCandidate(event) {
-    //   console.log('icecandidate event: ', event);
-    if (event.candidate) {
-        sendMessage({
-            type: 'candidate',
-            label: event.candidate.sdpMLineIndex,
-            id: event.candidate.sdpMid,
-            candidate: event.candidate.candidate
-        });
-    } else {
-        console.log('End of candidates.');
-    }
+  //   console.log('icecandidate event: ', event);
+  if (event.candidate) {
+    sendMessage({
+      type: "candidate",
+      label: event.candidate.sdpMLineIndex,
+      id: event.candidate.sdpMid,
+      candidate: event.candidate.candidate,
+    });
+  } else {
+    console.log("End of candidates.");
+  }
 }
 
 function handleCreateOfferError(event) {
-    console.log('createOffer() error: ', event);
+  console.log("createOffer() error: ", event);
 }
 
 function doCall() {
-    console.log('Sending offer to peer');
-    pc.createOffer(setLocalAndSendMessage, handleCreateOfferError);
+  console.log("Sending offer to peer");
+  pc.createOffer(setLocalAndSendMessage, handleCreateOfferError);
 }
 
 function doAnswer() {
-    console.log('Sending answer to peer.');
-    pc.createAnswer().then(
-        setLocalAndSendMessage,
-        onCreateSessionDescriptionError
-    );
+  console.log("Sending answer to peer.");
+  pc.createAnswer().then(
+    setLocalAndSendMessage,
+    onCreateSessionDescriptionError
+  );
 }
 
 function setLocalAndSendMessage(sessionDescription) {
-    pc.setLocalDescription(sessionDescription);
-    console.log('setLocalAndSendMessage sending message', sessionDescription);
-    sendMessage(sessionDescription);
+  pc.setLocalDescription(sessionDescription);
+  console.log("setLocalAndSendMessage sending message", sessionDescription);
+  sendMessage(sessionDescription);
 }
 
 function onCreateSessionDescriptionError(error) {
-    trace('Failed to create session description: ' + error.toString());
+  trace("Failed to create session description: " + error.toString());
 }
 
-
-
 function handleRemoteStreamAdded(event) {
+  console.log("Remote stream added.");
 
-    console.log('Remote stream added.');
+  remoteStream = event.streams[0];
 
-    remoteStream = event.streams[0];
-
-    // window.stream used for recording call
-    window.stream = remoteStream;
-    // 
-    remoteVideo.srcObject = remoteStream;
-    sendMessage('Remote Stream Added');
-
-
+  // window.stream used for recording call
+  window.stream = remoteStream;
+  //
+  remoteVideo.srcObject = remoteStream;
+  sendMessage("Remote Stream Added");
 }
 
 function handleRemoteStreamRemoved(event) {
-    console.log('Remote stream removed. Event: ', event);
+  console.log("Remote stream removed. Event: ", event);
 }
 
 function hangup() {
-    console.log('Hanging up.');
-    stop();
-    sendMessage('bye');
+  console.log("Hanging up.");
+  stop();
+  sendMessage("bye");
 }
 
-
 function handleRemoteHangup() {
-    console.log('Session terminated.');
+  console.log("Session terminated.");
 
-    stop();
-    isInitiator = false;
+  stop();
+  isInitiator = false;
 }
 
 function stop() {
-    isStarted = false;
-    pc.close();
-    pc = null;
-    remoteVideo.srcObject = null;
+  isStarted = false;
+  pc.close();
+  pc = null;
+  remoteVideo.srcObject = null;
 }
 
-
-// CALL RECORDING CODE 
+// CALL RECORDING CODE
 let mediaRecorder;
 let recordedBlobs;
 let isCallRecording = 0; // keep call recording status
 
 function handleDataAvailable(event) {
-    if (event.data && event.data.size > 0) {
-        recordedBlobs.push(event.data);
-    }
+  if (event.data && event.data.size > 0) {
+    recordedBlobs.push(event.data);
+  }
 }
 
 function startCallRecording() {
-    recordedBlobs = [];
-    let options = {
-        mimeType: 'video/webm;codecs=vp9'
+  recordedBlobs = [];
+  let options = {
+    mimeType: "video/webm;codecs=vp9",
+  };
+  if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+    console.error(`${options.mimeType} is not Supported`);
+    options = {
+      mimeType: "video/webm;codecs=vp8",
     };
     if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+      console.error(`${options.mimeType} is not Supported`);
+      options = {
+        mimeType: "video/webm",
+      };
+      if (!MediaRecorder.isTypeSupported(options.mimeType)) {
         console.error(`${options.mimeType} is not Supported`);
         options = {
-            mimeType: 'video/webm;codecs=vp8'
+          mimeType: "",
         };
-        if (!MediaRecorder.isTypeSupported(options.mimeType)) {
-            console.error(`${options.mimeType} is not Supported`);
-            options = {
-                mimeType: 'video/webm'
-            };
-            if (!MediaRecorder.isTypeSupported(options.mimeType)) {
-                console.error(`${options.mimeType} is not Supported`);
-                options = {
-                    mimeType: ''
-                };
-            }
-        }
+      }
     }
+  }
 
-    try {
-        mediaRecorder = new MediaRecorder(window.stream, options);
-        isCallRecording = 1;
-    } catch (e) {
-        console.error('Exception while creating MediaRecorder:', e);
-        return;
-    }
+  try {
+    mediaRecorder = new MediaRecorder(window.stream, options);
+    isCallRecording = 1;
+  } catch (e) {
+    console.error("Exception while creating MediaRecorder:", e);
+    return;
+  }
 
-    console.log('Created MediaRecorder', mediaRecorder, 'with options', options);
-    mediaRecorder.onstop = (event) => {
-        console.log('Recorder stopped: ', event);
-    };
-    mediaRecorder.ondataavailable = handleDataAvailable;
-    mediaRecorder.start(10); // collect 10ms of data
-    console.log('MediaRecorder started', mediaRecorder);
+  console.log("Created MediaRecorder", mediaRecorder, "with options", options);
+  mediaRecorder.onstop = (event) => {
+    console.log("Recorder stopped: ", event);
+  };
+  mediaRecorder.ondataavailable = handleDataAvailable;
+  mediaRecorder.start(10); // collect 10ms of data
+  console.log("MediaRecorder started", mediaRecorder);
 }
 
 function stopCallRecording() {
-    mediaRecorder.stop();
-    isCallRecording = 0;
-    saveCallRecording();
-    console.log('Recorded Blobs: ', recordedBlobs);
+  mediaRecorder.stop();
+  isCallRecording = 0;
+  saveCallRecording();
+  console.log("Recorded Blobs: ", recordedBlobs);
 }
 
 function saveCallRecording() {
-    var namefile = Math.floor(Math.random() * 96466465465) + ".webm";
-    const blob = new Blob(recordedBlobs, {
-        type: 'video/webm'
-    });
-    var file = new File([blob], namefile);
-    AWS.config.update({
-        "accessKeyId": "AKIAJEKFDQWHJ5E6XV4A",
-        "secretAccessKey": "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",
-        "region": "us-east-1"
-    });
-    var s3 = new AWS.S3();
-    var params = {
-        Bucket: 'roboxadev',
-        Key: file.name,
-        ContentType: file.type,
-        Body: file,
-        ACL: 'public-read'
+  var namefile = Math.floor(Math.random() * 96466465465) + ".webm";
+  const blob = new Blob(recordedBlobs, {
+    type: "video/webm",
+  });
+  var file = new File([blob], namefile);
+  AWS.config.update({
+    accessKeyId: "AKIAJEKFDQWHJ5E6XV4A",
+    secretAccessKey: "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",
+    region: "us-east-1",
+  });
+  var s3 = new AWS.S3();
+  var params = {
+    Bucket: "roboxadev",
+    Key: file.name,
+    ContentType: file.type,
+    Body: file,
+    ACL: "public-read",
+  };
+  var request = s3.putObject(params);
+  request.on("success", function (response) {
+    var user_id = getCookie("user_id");
+    // var ftypedata = file.type.split("/")[0];
+    var myobj = {
+      user_id: oncallwith,
+      supervisor_id: user_id,
+      url: "https://s3.amazonaws.com/roboxadev/" + file.name,
+      filename: file.name,
+      filesize: file.size.toString(),
+      timestamp: new Date(),
+      // type: ftypedata,
+      type: "video",
+      etag: response.data.ETag.replace(/"/g, ""),
     };
-    var request = s3.putObject(params);
-    request.on('success', function (response) {
-        var user_id = getCookie("user_id");
-        // var ftypedata = file.type.split("/")[0];
-        var myobj = {
-            user_id: oncallwith,
-            supervisor_id: user_id,
-            url: "https://s3.amazonaws.com/roboxadev/" + file.name,
-            filename: file.name,
-            filesize: file.size.toString(),
-            timestamp: new Date(),
-            // type: ftypedata,
-            type: 'video',
-            etag: response.data.ETag.replace(/"/g, "")
-        };
-        saveRecordingToDB(JSON.stringify(myobj));
-    });
-    request.on('error', function(response) {
-        console.log(JSON.stringify(response));
-    });
-    request.send();
+    saveRecordingToDB(JSON.stringify(myobj));
+  });
+  request.on("error", function (response) {
+    console.log(JSON.stringify(response));
+  });
+  request.send();
 }
