@@ -58,7 +58,7 @@ var sdpConstraints = {
 // room = prompt('enter room name:');
 
 if(!isSocketReady) {
-
+    console.log("isSocketReady", isSocketReady)
     socket = io.connect(chatServerUrl);
 
     socket.on("connect", function () {
