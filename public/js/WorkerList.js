@@ -29,6 +29,12 @@ $(document).ready(function () {
   $("#caldivshow").hide();
   var userId = getParameterByName("user_id");
   setCookie("user_id", userId, 10);
+
+  var ResToSetUserId = {
+    user_id: userId,
+    emp_id: JSON.parse(window.localStorage.getItem("loggeduserdata")).emp_id,
+  };
+  socket.emit("setUserId", ResToSetUserId);
   FnGetWorkerList();
   FnGetWorkerListByCallHistory();
   getAllnotification();
@@ -172,12 +178,6 @@ var timerinterval;
 var callotheruserid = "";
 var globalcalldata;
 var callrejectimeout;
-
-var ResToSetUserId = {
-  user_id: getCookie("user_id"),
-  emp_id: JSON.parse(window.localStorage.getItem("loggeduserdata")).emp_id,
-};
-socket.emit("setUserId", ResToSetUserId);
 // socket.on("connect", function () {
 //   console.log("connected" + socket.id);
 // });
