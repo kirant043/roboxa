@@ -178,9 +178,9 @@ var ResToSetUserId = {
   emp_id: JSON.parse(window.localStorage.getItem("loggeduserdata")).emp_id,
 };
 socket.emit("setUserId", ResToSetUserId);
-socket.on("connect", function () {
-  console.log("connected" + socket.id);
-});
+// socket.on("connect", function () {
+//   console.log("connected" + socket.id);
+// });
 // socket.on("disconnect", function () {
 //   console.log("Socket disconnected")
 //   logout();
