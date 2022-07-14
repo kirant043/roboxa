@@ -1,11 +1,11 @@
 // set up ======================================================================
-var express = require("express");
+var express = require('express');
 var app = express(); // create our app w/ express
-const fs = require("fs");
-const http = require("http");
+const fs = require('fs');
+const http = require('http');
 var request = require("request");
 var FCM = require("fcm-node");
-const config = require("./config.js");
+const io = require('socket.io')(3058);
 var globalapiurl = "https://nsbluescope.roboxatech.com";
 var clients = {};
 var offlineuser = [];
@@ -13,61 +13,47 @@ var call_end_date_time = Date();
 var call_start_date_time = Date();
 var startDate = call_start_date_time.toString();
 var endDate = call_end_date_time.toString();
-
-var morgan = require("morgan"); // log requests to the console (express4)
-var bodyParser = require("body-parser"); // pull information from HTML POST (express4)
-var methodOverride = require("method-override"); // simulate DELETE and PUT (express4)
+ 
+var morgan = require('morgan'); // log requests to the console (express4)
+var bodyParser = require('body-parser'); // pull information from HTML POST (express4)
+var methodOverride = require('method-override'); // simulate DELETE and PUT (express4)
 
 var options = {
-  key: fs.readFileSync("server.key"),
-  cert: fs.readFileSync("server.cert"),
+	key: fs.readFileSync('server.key'),
+	cert: fs.readFileSync('server.cert'),
 };
-app.use(express.static(__dirname + "/public")); // set the static files location /public/img will be /img for users
-app.use(morgan("dev")); // log every request to the console
-app.use(
-  bodyParser.urlencoded({
-    extended: "true",
-  })
-); // parse application/x-www-form-urlencoded
+app.use(express.static(__dirname + '/public')); // set the static files location /public/img will be /img for users
+app.use(morgan('dev')); // log every request to the console
+app.use(bodyParser.urlencoded({
+	'extended': 'true'
+})); // parse application/x-www-form-urlencoded
 
 app.use(bodyParser.json()); // parse application/json
-app.use(
-  bodyParser.json({
-    type: "application/vnd.api+json",
-  })
-); // parse application/vnd.api+json as json
+app.use(bodyParser.json({
+	type: 'application/vnd.api+json'
+})); // parse application/vnd.api+json as json
 
 app.use(methodOverride());
 
-require("./app/routes.js")(app);
-app.set("port", process.env.PORT || 80); //4063
-app.set("host", process.env.HOST || "https://nsbluescope.roboxatech.com");
+require('./app/routes.js')(app);
+app.set('port', process.env.PORT || 80); //4063
+app.set('host', process.env.HOST || 'https://nsbluescope.roboxatech.com');
 
-// http.createServer(app).listen(4028, function () {
-//   console.log(
-//     "Express server listening on port " +
-//       app.get("host") +
-//       ":" +
-//       app.get("port")
-//   );
-// });
-
-var server = app.listen(config.PORT, function () {
-  console.log(`${config.NODE_ENV} server listening on port ` + config.PORT);
+http.createServer(app).listen(4028, function(){
+  console.log('Express server listening on port ' + app.get('host') + ':' + app.get('port'));
 });
 
-const io = require("socket.io")(server);
 ("use strict");
 
 io.sockets.on("connection", function (socket) {
   // console log user id who connected to the server and room name from socket object
-  console.log("############################");
-  console.log(`userID: ${socket.id}`);
-  console.log(`rooms: ${socket.rooms}`);
-  console.log(`name: ${socket.nsp.name}`);
-  console.log(`connected: ${socket.nsp.connected}`);
-  console.log(`address: ${socket.nsp.address}`);
-  console.log("############################");
+  console.log('############################')
+  console.log(`userID: ${socket.id}`)
+  console.log(`rooms: ${socket.rooms}`)
+  console.log(`name: ${socket.nsp.name}`)
+  console.log(`connected: ${socket.nsp.connected}`)
+  console.log(`address: ${socket.nsp.address}`)
+  console.log('############################')
   //console.log("Successfully connected");
   // convenience function to log server messages on the client
   function log() {
@@ -117,7 +103,7 @@ io.sockets.on("connection", function (socket) {
 
     // socket.broadcast.emit("usergoofflineoncall", clients[socket.id]);
     /*delete clients[socket.id];*/
-    console.log("disconnected");
+    console.log('disconnected')
   });
 
   socket.on("usergoonlineoncall", function (args) {
@@ -480,10 +466,7 @@ io.sockets.on("connection", function (socket) {
     var ifaces = os.networkInterfaces();
     for (var dev in ifaces) {
       ifaces[dev].forEach(function (details) {
-        if (
-          details.family === "IPv4" &&
-          details.address !== "nsbluescope.roboxatech.com"
-        ) {
+        if (details.family === "IPv4" && details.address !== "nsbluescope.roboxatech.com") {
           socket.emit("ipaddr", details.address);
         }
       });
@@ -550,7 +533,7 @@ io.sockets.on("connection", function (socket) {
 
 function findUsersConnected(room, namespace) {
   console.log("findUsersConnected()");
-  console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+  console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
 
   var names = [];
   var ns = io.of("/");
@@ -569,15 +552,16 @@ function findUsersConnected(room, namespace) {
       //   }
       // } else {
       if (ns.connected[id].userid) {
-        console.log(`userID: ${ns.connected[id].userid}`);
+        console.log(`userID: ${ns.connected[id].userid}`)
         names.push(ns.connected[id].userid);
       } else {
-        console.log(`id: ${ns.connected[id].id}`);
+        console.log(`id: ${ns.connected[id].id}`)
         names.push(ns.connected[id].id);
       }
       // }
     }
   }
-  console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+  console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
   return names.sort();
 }
+
