@@ -292,7 +292,7 @@ function getUserMedia() {
             localStream = whiteNoise();
             console.log("catch got user media")
             sendMessage("got user media");
-
+            console.log("isInitiator", isInitiator)
             if (isInitiator) {
               console.log("Adding local stream.");
               maybeStart();
@@ -328,6 +328,7 @@ function gotStream(stream) {
   }
   console.log("gotStream got user media")
   sendMessage("got user media");
+  console.log("isInitiator", isInitiator)
   if (isInitiator) {
     console.log("Adding local stream.");
     maybeStart();
@@ -343,6 +344,7 @@ function gotStream2(stream) {
   }
   console.log("gotStream2 got user media")
   sendMessage("got user media");
+  console.log("isInitiator", isInitiator)
   if (isInitiator) {
     console.log("Adding local stream.");
     maybeStart();
