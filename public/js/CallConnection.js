@@ -468,7 +468,7 @@ function maybeStart() {
   ) {
     //  console.log('>>>>>> creating peer connection');
     createPeerConnection();
-    // pc.addStream(localStream);
+    pc.addStream(localStream);
 
     // const audio = new Audio("https://sample-videos.com/audio/mp3/crowd-cheering.mp3");
     // audio.loop = true;
@@ -516,7 +516,7 @@ function createPeerConnection() {
     uniqcallid = "";
     pc = new RTCPeerConnection(serverconfig);
     pc.onicecandidate = handleIceCandidate;
-    pc.ontrack = handleRemoteStreamAdded;
+    pc.onaddstream = handleRemoteStreamAdded;
     pc.onremovestream = handleRemoteStreamRemoved;
     console.log("Created RTCPeerConnnection");
     $("#allbuttonvideo").show();
