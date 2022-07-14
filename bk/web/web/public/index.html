@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html ng-app="scotchTodo">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Roboxa::Remote Assistance</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bs/bootstrap.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link rel="stylesheet" type="text/css" href="css/custom.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
+    <script>
+     var socket = io.connect("https://nsbluescope.roboxatech.com/socket.io");
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
+    <!-- load angular -->
+
+    <script src="core.js"></script>
+    <base href="/" />
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9
+      ]><base href="/" />
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <link rel="shortcut icon" href="favicon.ico" />
+  </head>
+
+  <body
+    class="login-container-bg"
+    ng-controller="mainController"
+    ng-keypress="loginByEnter($event)"
+  >
+    <div class="logo">
+      <a href="#">
+        <img src="images/logo.png" width="120" alt="Roboxa Logo" />
+      </a>
+    </div>
+    <div class="Login-hdr">
+      <img src="images/login-screen/login-icon.png" alt="login Icon Image" />
+      <div class="clearfix">Client Login</div>
+    </div>
+    <div class="container">
+      <div class="login-text">
+        <div class="row">
+          <div class="col-12 col-md-6">
+            <div class="login-Left">
+              <div class="login-Left__text">
+                <h4>Remote Assistance</h4>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-md-6">
+            <div class="loginForm">
+              <form>
+                <div class="wrap-input100" data-validate="Name is required">
+                  <input
+                    class="input100"
+                    type="text"
+                    name="name"
+                    ng-model="user.emp_id"
+                    placeholder="User ID"
+                  />
+                  <span class="focus-input100 fullwidth"></span>
+                </div>
+
+                <!-- Error Message fields -->
+
+                <!--   <div class="wrap-input100 login-error" data-validate="Name is required">
+                                    <input class="input100" type="text" name="name" placeholder="User ID">
+                                    <span class="focus-input100 fullwidth"></span>
+                                    <p class="error">Must not include special characters</p>
+                                </div>-->
+
+                <div class="wrap-input100" data-validate="Name is required">
+                  <input
+                    class="input100"
+                    type="password"
+                    name="name"
+                    ng-model="user.password"
+                    placeholder="Password"
+                  />
+                  <span class="focus-input100 fullwidth"></span>
+                </div>
+
+                <a
+                  ng-if="user.emp_id =='' ||  user.password ==''"
+                  ng-click="login()"
+                  class="loginBtn"
+                  >Login</a
+                >
+                <a
+                  ng-if="user.emp_id !='' && user.password !=''"
+                  ng-click="login()"
+                  class="loginBtn"
+                  style="color: white"
+                  >Login</a
+                >
+              </form>
+              <div class="row">
+                <div class="col-12 col-md-6">
+                  <label class="listcheckmark">
+                    <input ng-model="roboxa_remember_me" type="checkbox" />
+                    Remember me
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+                <!--<div class="col-12 col-md-6">
+                                <a href="#" class="float-right login-pg-pw" data-toggle="modal" data-target=".forgot_password">Forgot Password</a>
+                            </div>-->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <p class="copyright">
+        Copyright 2018-2020 ROBOXA., All Rights Reserved.
+        <a href="http://roboxatech.com/" target="_blank">www.roboxatech.com</a>
+      </p>
+    </footer>
+
+    <div
+      class="modal fade forgot_password"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="myLargeModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content loginPopup">
+          <div class="modal-header">Forgot Password</div>
+          <div class="modal-body">
+            <p class="popup-subhdr">
+              Enter your email ID send you a password on email
+            </p>
+            <div class="loginForm">
+              <div class="wrap-input100" data-validate="Name is required">
+                <input
+                  class="input100"
+                  type="test"
+                  name="name"
+                  placeholder="Enter Email ID here"
+                />
+                <span class="focus-input100 fullwidth"></span>
+              </div>
+
+              <a
+                href="#"
+                class="loginBtn"
+                data-toggle="modal"
+                data-target=".reset_password"
+                >Reset Password</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade reset_password"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="myLargeModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content loginPopup resetPopup">
+          <div class="modal-header">Reset Password</div>
+          <div class="modal-body">
+            <p class="popup-subhdr choose-pw">Choose your Password</p>
+            <div class="loginForm">
+              <div class="wrap-input100" data-validate="Name is required">
+                <input
+                  class="input100"
+                  type="test"
+                  name="name"
+                  placeholder="User ID"
+                />
+                <span class="focus-input100 fullwidth"></span>
+              </div>
+
+              <div class="wrap-input100" data-validate="Name is required">
+                <input
+                  class="input100"
+                  type="password"
+                  name="name"
+                  placeholder="Password"
+                />
+                <span class="focus-input100 fullwidth"></span>
+              </div>
+
+              <div class="wrap-input100" data-validate="Name is required">
+                <input
+                  class="input100"
+                  type="password"
+                  name="name"
+                  placeholder="Confirm Password"
+                />
+                <span class="focus-input100 fullwidth"></span>
+              </div>
+
+              <a href="#" class="loginBtn">Reset Password</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="js/jquery-3.2.1.slim.min.js"></script>
+    <script src="js/bs/popper.min.js"></script>
+    <script src="js/bs/bootstrap.min.js"></script>
+  </body>
+</html>

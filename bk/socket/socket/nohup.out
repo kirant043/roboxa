@@ -1,0 +1,14 @@
+module.js:549
+    throw err;
+    ^
+
+Error: Cannot find module '/home/ubuntu/remote_assistance_server/socket/server.js'
+    at Function.Module._resolveFilename (module.js:547:15)
+    at Function.Module._load (module.js:474:25)
+    at Function.Module.runMain (module.js:693:10)
+    at startup (bootstrap_node.js:188:16)
+    at bootstrap_node.js:609:3
+httpServer listening on port 3058
+httpsServer listening on port 443
+httpServer listening on port 3058
+httpsServer listening on port 443
