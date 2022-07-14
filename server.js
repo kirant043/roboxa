@@ -1,11 +1,6 @@
 // set up ======================================================================
 var express = require('express');
-var config = require('config');
 var app = express(); // create our app w/ express
-if (!config.get('jwtPrivateKey')) {
-	console.error('FATAL ERROR: jwtPrivateKey is not defined.');
-	process.exit(1);
-}
 const fs = require('fs');
 const http = require('http');
 var request = require("request");
@@ -18,10 +13,6 @@ var call_end_date_time = Date();
 var call_start_date_time = Date();
 var startDate = call_start_date_time.toString();
 var endDate = call_end_date_time.toString();
-
-// mongoose for mongodb
-// set the port
-var database = require('./config/database'); // load the database config
  
 var morgan = require('morgan'); // log requests to the console (express4)
 var bodyParser = require('body-parser'); // pull information from HTML POST (express4)
