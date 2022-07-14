@@ -6,26 +6,26 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"> 
-
-    <title>Roboxa::</title>
+    <title>Roboxa::Remote Assistance</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="css/bs/bootstrap.min.css" />
     <link href="js/ALightBox.css" type="text/css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
     <link rel="stylesheet" type="text/css" href="css/custom2.css" />
-
+    <link rel="shortcut icon" href="favicon.ico" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.15/lodash.min.js"></script>
 <script src="https://momentjs.com/static/js/global.js"></script>
     <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
+<script>
+    var socket = io.connect("https://nsbluescope.roboxatech.com/socket.io");
+</script>
 
     <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
     <script src="js/FileSaver.min.js"></script>
     <script src="js/jquery.multiselect.js"></script>
     <script src="js/jquery.qrcode.min.js"></script>
-<script src="https://www.google.com/jsapi"></script>
+<!-- <script src="https://www.google.com/jsapi"></script> -->
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
     <script src="https://sdk.amazonaws.com/js/aws-sdk-2.19.0.min.js"></script>
@@ -73,7 +73,7 @@
             border: 1px solid #ced4da;
             overflow: auto;
         }
-        
+
         #myOverlay {
             position: absolute;
             height: 100%;
@@ -127,7 +127,7 @@
                 transform: rotate(360deg);
             }
         }
-        
+
         .btn-primary {
             background: #173b52;
         }
@@ -152,7 +152,7 @@
         .modal-header .close {
             margin-right: 0rem;
         }
-        
+
         .dropdown-toggle::after {
             position: absolute;
             top: 1em;
@@ -349,13 +349,13 @@ padding-left: 8px;">All calls</div>
     <br>
    <label class="radio-inline" style="padding-right: 10px;"><input style="margin-right: 4px;" onclick="createtimewisegraph('byDay','Day')" type="radio" name="optradio" checked>Daily</label>
 <label class="radio-inline" style="padding-right: 10px;"><input style="margin-right: 4px;"  onclick="createtimewisegraph('forWeek','Weeks')" type="radio" name="optradio">Weekly</label>
-<label class="radio-inline" style="padding-right: 10px;"><input style="margin-right: 4px;"  onclick="createtimewisegraph('forMonth','Months')" type="radio" name="optradio">Monthly</label> 
+<label class="radio-inline" style="padding-right: 10px;"><input style="margin-right: 4px;"  onclick="createtimewisegraph('forMonth','Months')" type="radio" name="optradio">Monthly</label>
  <div class="form-group" style="float: right;
 
 margin-top: -23px;">
       <label for="sel1">Select Expert</label>
       <select class="form-control" id="expertoption">
-       
+
       </select>
 
     </div>
@@ -376,7 +376,7 @@ padding-left: 8px;">Pie chart</div>
       <div class="panel-body" style="border: 1px solid #173b52;"><div id="chart_div"></div>
   </div>
     </div>
-    
+
 </div>
 <div class="col-sm-8" >
      <div class="panel panel-default">
@@ -413,7 +413,7 @@ padding-left: 8px;">Line chart</div>
       <div class="panel-body" style="border: 1px solid #173b52;"><div id="chart_div2"></div>
   </div>
     </div>
-    
+
 </div>
 
 </div>
@@ -422,8 +422,8 @@ padding-left: 8px;">Line chart</div>
 
 
 <!-- <center><div id="chart_div2"></div> </center> -->
- 
-</div> 
+
+</div>
 </div>
   </div>
 
@@ -576,7 +576,7 @@ padding-left: 8px;">Line chart</div>
                                         <input type="text" class="form-control" name="company" id="super_company"
                                             placeholder="Company" required>
                                     </div>
-                                    
+
                                 </div> -->
                                 <div class="form-row float-right">
                                     <div class="p-2">
@@ -629,7 +629,7 @@ padding-left: 8px;">Line chart</div>
                                         <input type="text" class="form-control" id="worker_glassId"
                                             name="glass_id" placeholder="ID"  required>
                                     </div>
-                                    
+
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group col-md-4">
@@ -651,7 +651,7 @@ padding-left: 8px;">Line chart</div>
                                         </div>
                                     </div>
                                     </center>
-                                
+
                             </div>
                         </div>
                     </form>

@@ -1,25 +1,17 @@
 // set up ======================================================================
-var express = require("express");
+var express = require('express');
+var config = require('config');
 var app = express(); // create our app w/ express
-var fs = require("fs");
-var http = require("http");
-var https = require("https");
+if (!config.get('jwtPrivateKey')) {
+	console.error('FATAL ERROR: jwtPrivateKey is not defined.');
+	process.exit(1);
+}
+const fs = require('fs');
+const http = require('http');
 var request = require("request");
 var FCM = require("fcm-node");
-const { Server } = require("socket.io");
-const config =  require('./config.js');
-const PORT = config.PORT;
-
-
-// mongoose for mongodb
-// set the port
-var database = require("./config/database"); // load the database config
-
-var morgan = require("morgan"); // log requests to the console (express4)
-var bodyParser = require("body-parser"); // pull information from HTML POST (express4)
-var methodOverride = require("method-override"); // simulate DELETE and PUT (express4)
-
-var globalapiurl = "https://nsbluescope.roboxatech.com"; //'http://52.15.38.221:4063'
+const io = require('socket.io')(3058);
+var globalapiurl = "https://nsbluescope.roboxatech.com";
 var clients = {};
 var offlineuser = [];
 var call_end_date_time = Date();
@@ -27,57 +19,43 @@ var call_start_date_time = Date();
 var startDate = call_start_date_time.toString();
 var endDate = call_end_date_time.toString();
 
+// mongoose for mongodb
+// set the port
+var database = require('./config/database'); // load the database config
+ 
+var morgan = require('morgan'); // log requests to the console (express4)
+var bodyParser = require('body-parser'); // pull information from HTML POST (express4)
+var methodOverride = require('method-override'); // simulate DELETE and PUT (express4)
+
 var options = {
-  key: fs.readFileSync("server.key"),
-  cert: fs.readFileSync("server.cert"),
+	key: fs.readFileSync('server.key'),
+	cert: fs.readFileSync('server.cert'),
 };
+app.use(express.static(__dirname + '/public')); // set the static files location /public/img will be /img for users
+app.use(morgan('dev')); // log every request to the console
+app.use(bodyParser.urlencoded({
+	'extended': 'true'
+})); // parse application/x-www-form-urlencoded
 
-// configuration ===============================================================
-// connect to mongoDB database on modulus.io
-
-app.use(express.static(__dirname + "/public")); // set the static files location /public/img will be /img for users
-app.use(morgan("dev")); // log every request to the console
-app.use(
-  bodyParser.urlencoded({
-    extended: "true",
-  })
-); // parse application/x-www-form-urlencoded
 app.use(bodyParser.json()); // parse application/json
-app.use(
-  bodyParser.json({
-    type: "application/vnd.api+json",
-  })
-); // parse application/vnd.api+json as json
+app.use(bodyParser.json({
+	type: 'application/vnd.api+json'
+})); // parse application/vnd.api+json as json
+
 app.use(methodOverride());
 
-// routes ======================================================================
-require("./app/routes.js")(app);
-// app.set('port', process.env.PORT || 4026); //4063
-// app.set('host', process.env.HOST || '52.15.113.161'); //'52.15.38.221'
-// listen (start app with node server.js) ======================================
+require('./app/routes.js')(app);
+app.set('port', process.env.PORT || 80); //4063
+app.set('host', process.env.HOST || 'https://nsbluescope.roboxatech.com');
 
-// if(config.NODE_ENV === 'development') {
-//   var server = app.listen(PORT, function(){
-//     console.log(`${config.NODE_ENV} server listening on port ` + PORT);
-//   });
-// } else {
-//   var server = https.createServer(options, app).listen(PORT, function(){
-//     console.log(`https ${config.NODE_ENV} server listening on port ` + PORT);
-//   });
-// }
-var server = app.listen(PORT, function(){
-  console.log(`${config.NODE_ENV} server listening on port ` + PORT);
+http.createServer(app).listen(4028, function(){
+  console.log('Express server listening on port ' + app.get('host') + ':' + app.get('port'));
 });
-// const server = https.createServer(options, app);
-var io = new Server(3058);
-// var io = new Server(server);
-
 
 ("use strict");
 
-io.on("connection", function (socket) {
+io.sockets.on("connection", function (socket) {
   // console log user id who connected to the server and room name from socket object
-  console.log(socket.rooms)
   console.log('############################')
   console.log(`userID: ${socket.id}`)
   console.log(`rooms: ${socket.rooms}`)
@@ -96,7 +74,7 @@ io.on("connection", function (socket) {
   socket.on("setUserId", function (args) {
     // Map user to socket id
     offlineuser = [];
-    console.log("setUserId", args);
+    console.log(args);
     // Check if user is already connected
     /*if (Object.values(clients).indexOf(args.user_id) > -1) {
       var found = Object.keys(clients).filter(function (key) {
@@ -115,9 +93,9 @@ io.on("connection", function (socket) {
       user_id: args.user_id,
     };
     clients[socket.id] = args.user_id;
-    console.log("clients", clients);
+    console.log(clients);
     //socket.broadcast.emit('connectUser', data);
-    socket.emit("connectUser", data);
+    io.sockets.emit("connectUser", data);
   });
   /*socket.on("isConnected", function (id, ackFn) {
     let otherSocket = io.sockets.clients[id];
@@ -399,8 +377,8 @@ io.on("connection", function (socket) {
       user_id: args.user_id,
     };
     socket.in(args.other_user_id).emit("callAnswer", data);
-    io.sockets.in(args.other_user_id).emit('callAnswer', data);
-    socket.broadcast.emit('callAnswer', data);
+    //io.sockets.in(args.other_user_id).emit('callAnswer', data);
+    //socket.broadcast.emit('callAnswer', data);
   });
 
   socket.on("callEnd", function (args) {
@@ -433,16 +411,16 @@ io.on("connection", function (socket) {
   });
 
   socket.on("GetOnlineUsers", function () {
+    console.log("GetOnlineUsers");
 
     var connected_user = findUsersConnected("", "");
     //console.log(connected_user);
     var data = {
       user_id: connected_user,
     };
-    io.sockets.emit('GetOnlineUsers', data);
-    socket.broadcast.emit('GetOnlineUsers', data);
-    console.log("GetOnlineUsers", data);
-    socket.emit("GetOnlineUsers", data);
+    //io.sockets.emit('AllConnectedUsers', data);
+    //socket.broadcast.emit('GetOnlineUsers', data);
+    io.sockets.emit("GetOnlineUsers", data);
   });
 
   socket.on("message", function (message) {
@@ -469,13 +447,12 @@ io.on("connection", function (socket) {
 
     log("Received request to create or join room " + room);
 
-    // var clientsInRoom = io.sockets.adapter.rooms[room];
-    var clientsInRoom = Object.fromEntries(io.sockets.adapter.rooms)[room];
+    var clientsInRoom = io.sockets.adapter.rooms[room];
     var numClients = clientsInRoom
-      ? 1
+      ? Object.keys(clientsInRoom.sockets).length
       : 0;
     log("Room " + room + " now has " + numClients + " client(s)");
-    console.log("numClients", numClients)
+
     if (numClients === 0) {
       socket.join(room);
       log("Client ID " + socket.id + " created room " + room);
@@ -564,38 +541,34 @@ io.on("connection", function (socket) {
 });
 
 function findUsersConnected(room, namespace) {
+  console.log("findUsersConnected()");
   console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
 
   var names = [];
-  var ns = io.of("/").adapter.rooms;
+  var ns = io.of("/");
   if (ns) {
-    ns.forEach((id, key) => {
-      if(!names.some(item => item === key)) {
-        names.push(key);
+    for (var id in ns.connected) {
+      // if (room) {
+      //   var roomKeys = Object.keys(ns.connected[id].rooms);
+      //   for (var i in roomKeys) {
+      //     if (roomKeys[i] == room) {
+      //       if (ns.connected[id].userid) {
+      //         names.push(ns.connected[id].userid);
+      //       } else {
+      //         names.push(ns.connected[id].id);
+      //       }
+      //     }
+      //   }
+      // } else {
+      if (ns.connected[id].userid) {
+        console.log(`userID: ${ns.connected[id].userid}`)
+        names.push(ns.connected[id].userid);
+      } else {
+        console.log(`id: ${ns.connected[id].id}`)
+        names.push(ns.connected[id].id);
       }
-    })
-    // for (var id in ns.connected) {
-    //   // if (room) {
-    //   //   var roomKeys = Object.keys(ns.connected[id].rooms);
-    //   //   for (var i in roomKeys) {
-    //   //     if (roomKeys[i] == room) {
-    //   //       if (ns.connected[id].userid) {
-    //   //         names.push(ns.connected[id].userid);
-    //   //       } else {
-    //   //         names.push(ns.connected[id].id);
-    //   //       }
-    //   //     }
-    //   //   }
-    //   // } else {
-    //   // if (ns.connected[id].userid) {
-    //   //   console.log(`userID: ${ns.connected[id].userid}`)
-    //   //   names.push(ns.connected[id].userid);
-    //   // } else {
-    //   //   console.log(`id: ${ns.connected[id].id}`)
-    //   //   names.push(ns.connected[id].id);
-    //   // }
-    //   // }
-    // }
+      // }
+    }
   }
   console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
   return names.sort();

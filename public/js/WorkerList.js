@@ -13,6 +13,12 @@ $(document).ready(function () {
     }
   }
 
+  $.ajaxSetup({
+    headers: {
+      "x-auth-token": JSON.parse(window.localStorage.getItem("loggeduserdata"))
+        .token,
+    },
+  });
   // audio.loop = true;
   // audio.play();
 
@@ -23,16 +29,10 @@ $(document).ready(function () {
   $("#caldivshow").hide();
   var userId = getParameterByName("user_id");
   setCookie("user_id", userId, 10);
-  var ResToSetUserId = {
-      user_id: getCookie("user_id"),
-  };
-  socket.emit("setUserId", ResToSetUserId);
   FnGetWorkerList();
   FnGetWorkerListByCallHistory();
   getAllnotification();
   FnGetRecentUplodedDoc();
-  var localVideo = document.querySelector('#localVideo');
-  var remoteVideo = document.querySelector('#remoteVideo');
 
   $("input[id=filedata]").change(function (ev) {
     $("#filenameshow").innerHTML = "";
@@ -173,6 +173,17 @@ var callotheruserid = "";
 var globalcalldata;
 var callrejectimeout;
 
+var ResToSetUserId = {
+  user_id: getCookie("user_id"),
+  emp_id: JSON.parse(window.localStorage.getItem("loggeduserdata")).emp_id,
+};
+socket.emit("setUserId", ResToSetUserId);
+socket.on("connect", function () {
+  console.log("connected" + socket.id);
+});
+socket.on("disconnect", function () {
+  logout();
+});
 function removefilesingle(id) {
   $("#fileup" + id).remove();
   rams.splice(id, 1);
@@ -208,6 +219,7 @@ function FnGetWorkerList() {
     success: function (data) {
       hideloader();
       showWorkerList(data);
+      console.log('emitting getonline users' , socket)
       socket.emit("GetOnlineUsers");
     },
     error: function (xhr, status, error) {
@@ -237,7 +249,6 @@ function removefile() {
 function showWorkerList(data) {
   for (var i = 0; i < data.length; i++) {
     data[i].user_id = data[i]._id;
-    var status = data[i].is_active ? 'Active' : 'Inactive';
     workerListIds.push(data[i].user_id);
     var tblContent =
       "<tr>" +
@@ -258,7 +269,7 @@ function showWorkerList(data) {
       '<td scope="row" class="ellipsis-text"><span id="span5' +
       data[i]._id +
       '">Inactive</span></td>' +
-      '<td><button type="button" name="' +
+      '<td><button disabled type="button" name="' +
       data[i].f_name +
       " " +
       data[i].l_name +
@@ -268,7 +279,7 @@ function showWorkerList(data) {
       data[i].location +
       '" id="' +
       data[i].user_id +
-      '" class="btn btn-success btn-sm" data-toggle="modal" disabled OnClick="makeCall(this)">Call</button></td>' +
+      '" class="btn btn-success btn-sm" data-toggle="modal" OnClick="makeCall(this)">Call</button></td>' +
       "</tr>";
     $("#tblContent").append(tblContent);
   }
@@ -571,7 +582,7 @@ socket.on("callEnd", function (data) {
   isInitiator = false;
   isStarted = false;
   isChannelReady = false;
-  if(pc) {
+  if (pc) {
     pc.close();
   }
 
@@ -610,7 +621,7 @@ socket.on("callEnd", function (data) {
 
 socket.on("connectUser", function (data) {
   // socket.emit('setUserId', ResToSetUserId);
-  console.log(workerListIds,data.user_id)
+  console.log(workerListIds, data);
   for (var i = 0; i < workerListIds.length; i++) {
     if (workerListIds[i] == data.user_id) {
       $("#" + data.user_id).removeAttr("disabled");
@@ -730,7 +741,7 @@ function FnShowReciveCallDetail(data) {
         '<div class="card">' +
         '<div class="card-header" id="headingOne">' +
         '<div class="row">' +
-        '<div class="col-4 col-sm-3 ellipsis-text">' +
+        '<div class="col-4 col-sm-2 ellipsis-text">' +
         "<span>" +
         data[i].full_name +
         "</span>" +
@@ -740,7 +751,7 @@ function FnShowReciveCallDetail(data) {
         data[i].glass_id +
         "</span>" +
         "</div>" +
-        '<div class="col-3 col-sm-3 ellipsis-text">' +
+        '<div class="col-3 col-sm-2 ellipsis-text">' +
         "<span>" +
         data[i].location +
         "</span>" +
@@ -750,6 +761,10 @@ function FnShowReciveCallDetail(data) {
         get_time_diff(data[i].start_date, data[i].end_date) +
         " hrs</span>" +
         "</div>" +
+        '<div class="col-2 col-sm-2 hide-on-mobile ellipsis-text">' +
+        "<span>" +
+        getdateTimeformat(data[i].start_date) +
+        "</span> </div>" +
         '<div class="col-2 col-sm-2 text-center">' +
         '<button class="btn btn-link  collapsed" data-toggle="collapse" data-target="#outgoing' +
         i +
@@ -880,7 +895,7 @@ function FnShowOutgoingCallDetail(data) {
         '<div class="card">' +
         '<div class="card-header" id="headingOne">' +
         '<div class="row">' +
-        '<div class="col-4 col-sm-3 ellipsis-text">' +
+        '<div class="col-4 col-sm-2 ellipsis-text">' +
         "<span>" +
         data[i].full_name +
         "</span>" +
@@ -890,7 +905,7 @@ function FnShowOutgoingCallDetail(data) {
         data[i].glass_id +
         "</span>" +
         "</div>" +
-        '<div class="col-3 col-sm-3 ellipsis-text">' +
+        '<div class="col-3 col-sm-2 ellipsis-text">' +
         "<span>" +
         data[i].location +
         "</span>" +
@@ -899,6 +914,11 @@ function FnShowOutgoingCallDetail(data) {
         "<span>" +
         get_time_diff(data[i].start_date, data[i].end_date) +
         " hrs</span>" +
+        "</div>" +
+        '<div class="col-2 col-sm-2 hide-on-mobile ellipsis-text">' +
+        "<span>" +
+        getdateTimeformat(data[i].start_date) +
+        "</span>" +
         "</div>" +
         '<div class="col-2 col-sm-2 text-center">' +
         '<button class="btn btn-link  collapsed" data-toggle="collapse" data-target="#outgoing' +
@@ -1673,6 +1693,35 @@ function getdateformat(datestring) {
   return today;
 }
 
+function getdateTimeformat(datestring) {
+  var today = new Date(datestring);
+  var dd = today.getDate();
+  var mm = today.getMonth() + 1; //January is 0!
+
+  var yyyy = today.getFullYear();
+
+  var hh = today.getHours();
+  var m = today.getMinutes();
+  var ss = today.getSeconds();
+  if (dd < 10) {
+    dd = "0" + dd;
+  }
+  if (mm < 10) {
+    mm = "0" + mm;
+  }
+  if (hh < 10) {
+    hh = "0" + hh;
+  }
+  if (m < 10) {
+    m = "0" + m;
+  }
+  if (ss < 10) {
+    ss = "0" + ss;
+  }
+  var today = dd + "/" + mm + "/" + yyyy + " " + hh + ":"+ m + ":"+ ss;
+  return today;
+}
+
 function getsecondsvalue(first, second) {
   var fromTime = new Date(first);
   var toTime = new Date(second);
@@ -2019,16 +2068,38 @@ function hideloader() {
   $("#loadingGIF").hide();
 }
 
-function logout(argument) {
+function logout() {
+  console.log("Inside Logout");
   var logoutdata = {
     user_id: getCookie("user_id"),
   };
-  socket.emit("userDisconnect", logoutdata);
-  socket.disconnect();
-  window.location.href = "https://" + window.location.host;
+
   //localStorage.clear()
-  localStorage.setItem("loggeduserdata", "");
-  localStorage.setItem("remmemberme", "");
+  // localStorage.setItem("loggeduserdata", "");
+  // localStorage.setItem("roboxa_remember_me", "");
+
+  $.ajax({
+    url: "/api/userlogout",
+    type: "POST",
+    data: JSON.parse(window.localStorage.getItem("loggeduserdata")),
+    success: function (result) {
+      console.log("Logout Success");
+      // setCookie("user_id", "", 10);
+      // const tempUrl = new URL(window.location.href);
+      window.location.href = "https://" + window.location.host;
+      // window.location.href = tempUrl.origin;
+      // window.location.href = "http://"  window.location.host
+      // localStorage.clear()
+      // localStorage.setItem('loggeduserdata', '');
+      //localStorage.setItem('roboxa_remember_me', '');
+      if (!JSON.parse(window.localStorage.getItem("roboxa_remember_me")))
+        localStorage.clear();
+      //localStorage.clear()
+    },
+    error: function (err) {
+      console.log(err);
+    },
+  });
 }
 
 function playPause() {
@@ -2226,17 +2297,26 @@ function changeActiveState(type) {
     $("#freeHandTool").attr("src", "images/free-hand-active.png");
     $("#drawRectTool").attr("src", "images/rectange-line.png");
     $("#drawCircleTool").attr("src", "images/circle-line.png");
+    //$("#drawLineTool").attr("src", "images/line.png");
   } else if (type == "rect") {
     //var src = ($('#drawRectTool').attr('src') === "images/rectange-line.png") ? "images/rectange-line-active.png"	: "images/rectange-line.png";
     $("#drawRectTool").attr("src", "images/rectange-line-active.png");
     $("#freeHandTool").attr("src", "images/free-hand.png");
     $("#drawCircleTool").attr("src", "images/circle-line.png");
+   // $("#drawLineTool").attr("src", "images/line.png");
   } else if (type == "circle") {
     //var src = ($('#drawCircleTool').attr('src') === "images/circle-line.png") ? "images/circle-line-active.png"	: "images/circle-line.png";
     $("#drawCircleTool").attr("src", "images/circle-line-active.png");
     $("#drawRectTool").attr("src", "images/rectange-line.png");
     $("#freeHandTool").attr("src", "images/free-hand.png");
-  } else if (type == "up") {
+   // $("#drawLineTool").attr("src", "images/line.png");
+  } /*else if (type == "line") {
+    //var src = ($('#drawRectTool').attr('src') === "images/rectange-line.png") ? "images/rectange-line-active.png"	: "images/rectange-line.png";
+    $("#drawLineTool").attr("src", "images/line-active.png");
+    $("#freeHandTool").attr("src", "images/free-hand.png");
+    $("#drawRectTool").attr("src", "images/rectange-line.png");
+    $("#drawCircleTool").attr("src", "images/circle-line.png");
+  }*/ else if (type == "up") {
     //var src = ($('#zoomUpTool').attr('src') === "images/img-zoom.png") ? "images/img-zoom-active.png"	: "images/img-zoom.png";
     $("#zoomUpTool").attr("src", "images/img-zoom-active.png");
     $("#zoomDownTool").attr("src", "images/zoom-out.png");
@@ -2613,7 +2693,7 @@ socket.on("desktopnotification", function (data) {
   //             icon: "img/logo.png",
 
   //             onClick: function () {
-  //                 window.location="/";
+  //                 window.location="http://52.15.113.161:4057";
   //                 this.close();
   //             }
   //         });

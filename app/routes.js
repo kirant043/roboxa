@@ -3,10 +3,12 @@ var dbcheck = "";
 var MongoClient = require("mongodb").MongoClient;
 var ObjectID = require("mongodb").ObjectID;
 const config = require("../config.js");
-const request = require("request");
 var url = config.MONGOURL;
+//var url = "mongodb://localhost:45628/";
+var { generateToken } = require("./models/token");
+var auth = require("./middleware/auth");
 MongoClient.connect(url, (err, database) => {
-  if (err) return; // console.log(err)
+  if (err) return console.log(err);
   //require('./app/routes')(app,{});
   //check below line changed
 
@@ -14,41 +16,10 @@ MongoClient.connect(url, (err, database) => {
   dbaa = dbo;
   dbcheck = database;
   /*Return only the documents with the address "Park Lane 38":*/
-  console.log("Connection to MONGODB Successfull");
+  console.log("result");
 });
 
 module.exports = function (app) {
-
-  app.get("/geticeservers", function (req, res) {
-    const options = {
-      method: "PUT",
-      url: "https://global.xirsys.net/_turn/MyFirstApp",
-      headers: {
-        "Content-type": "application/json",
-        "authorization":
-          "Basic cm9ib3hhOmRmMTMyOWFlLTU5OGQtMTFlOC04NDNmLTY0ZTVjZWFiMWEwMQ==",
-      },
-    };
-
-    request(options, function (error, response, body) {
-      if (error) {
-        res.send(error);
-      }
-      let result = JSON.parse(body);
-      let servers = result["v"];
-      console.log("iceServers", JSON.parse(body), servers["iceServers"])
-      let data = {};
-      data["iceServers"] = [];
-      data["iceServers"].push({"urls": servers["iceServers"][0]["url"]})
-      data["iceServers"].push({
-        "username": servers["iceServers"][1]["username"],
-        "urls": [servers["iceServers"][1]["url"], servers["iceServers"][2]["url"]],
-        "credential": servers["iceServers"][1]["credential"]
-      })
-      res.json(data);
-    });
-  });
-
   // api ---------------------------------------------------------------------
   // get all todos
   app.get("/api/client", function (req, res) {
@@ -58,85 +29,7 @@ module.exports = function (app) {
       .find(query)
       .toArray(function (err, result) {
         if (err) throw err;
-        // console.log(result);
-
-        res.json(result);
-      });
-  });
-
-  app.post("/api/userlogin", function (req, res) {
-    // console.log("user data",req.body)
-
-    var query = req.body;
-    if (!query) {
-      return;
-    }
-    if (query.emp_id === "admin") {
-      query.user = "admin";
-      delete query.password;
-      res.json(query);
-    } else {
-      dbaa
-        .collection("supervisor")
-        .find(query)
-        .toArray(function (err, result) {
-          if (err) throw err;
-          // // console.log(result);
-          res.json(result);
-        });
-    }
-  });
-
-  app.post("/api/userdetails", function (req, res) {
-    // console.log(req.body)
-    var query = {
-      supervisor_id: ObjectID(req.body.supervisor_id),
-    };
-    dbaa
-      .collection("user")
-      .find(query)
-      .toArray(function (err, result) {
-        if (err) throw err;
-        // // console.log(result);
-
-        res.json(result);
-      });
-
-    /*dbaa.collection("supervisor").findOne({'_id':ObjectID(req.body['supervisor_id'])}, function (err, supervisorObj) {
-		if (err) throw err;
-		// console.log('supervisorObj  ',supervisorObj);
-		if(supervisorObj && supervisorObj.hasOwnProperty('worker_list')){
-			var query = [];
-			if(typeof(supervisorObj['worker_list']) == 'object' && supervisorObj['worker_list'].length >0) {
-				supervisorObj['worker_list'].forEach(function(e){
-					query.push(ObjectID(e));
-				});
-			} else if(typeof(supervisorObj['worker_list']) == 'string'){
-				query.push(ObjectID(supervisorObj['worker_list']));
-			}
-			dbaa.collection("user").find({_id:{$in:query}}).toArray(function (er, results) {
-				if (er) throw er;
-				// // console.log(result);
-				res.json(results);
-			});
-		} else {
-			res.json({ok:0});
-		}
-    });*/
-  });
-
-  //start notification code
-  app.post("/api/userdetails", function (req, res) {
-    // console.log(req.body)
-    var query = {
-      supervisor_id: ObjectID(req.body.supervisor_id),
-    };
-    dbaa
-      .collection("user")
-      .find(query)
-      .toArray(function (err, result) {
-        if (err) throw err;
-        // // console.log(result);
+        console.log(result);
 
         res.json(result);
       });
@@ -157,7 +50,7 @@ module.exports = function (app) {
         if (result.length > 0) {
           var findata = result[0];
           var supervisor_idtoken = findata._id.toLocaleString();
-          // console.log(findata._id)
+          console.log(findata._id);
           var pickdate = new Date()
             .toLocaleString("en-US", {
               timeZone: "Asia/Kuala_Lumpur",
@@ -182,12 +75,252 @@ module.exports = function (app) {
             },
             function (err, result) {
               if (err) throw err;
-              // // console.log("remove detaisl",result);
+              // console.log("remove detaisl",result);
               dbaa
                 .collection("usertokkendetails")
                 .insert(token_data, function (err, result) {
                   if (err) throw err;
-                  // console.log("1 notification inserted");
+                  console.log("1 notification inserted");
+                  var response = {
+                    supervisorData: {
+                      full_name: findata.f_name + " " + findata.l_name,
+                      id: supervisor_idtoken,
+                    },
+                    msg: "login Successfully",
+                    status: "200",
+                  };
+                  res.json(response);
+                });
+            }
+          );
+        } else {
+          var failed = {
+            msg: "login failed",
+            status: "404",
+          };
+          res.json(failed);
+        }
+      });
+  });
+  var user = [];
+  app.post("/api/userlogin", function (req, res) {
+    console.log(req.body);
+
+    var query = req.body;
+    if (!query) {
+      return;
+    }
+    console.log("user", user);
+    // if (user !== undefined && user.length > 0) {
+    //   if (
+    //     user.find(function (a) {
+    //       return a.emp_id === query.emp_id && a.isLoggedIn;
+    //     })
+    //   ) {
+    //     dbaa
+    //       .collection("userlogindetails")
+    //       .find({ user_name: query.emp_id })
+    //       .toArray(function (err, result) {
+    //         if (err) throw err;
+    //         var obj = result[0];
+    //         var pair = { isLoggedIn: true };
+    //         obj = { ...obj, ...pair };
+    //         res.json(obj);
+    //       });
+    //     // res.json(obj);
+    //     return;
+    //   }
+    // }
+
+    if (query.emp_id === "admin") {
+      query.user = "admin";
+      delete query.password;
+      // var token = generateToken(query.emp_id);
+      // query.token = token;
+      // var token_data = {
+      //   user_token: token,
+      //   user_name: query.user,
+      //   user_id: query.user,
+      // };
+      //
+      // dbaa
+      //   .collection("userlogindetails")
+      //   .insert(token_data, function (err, result) {
+      //     if (err) throw err;
+      //     console.log("1 notification inserted");
+      //   });
+      //   query.isLoggedIn = true;
+      //   user.push(query);
+      res.json(query);
+    } else {
+      /*dbaa.collection("supervisor").find(query).toArray(function (err, result) {
+        if (err) throw err;
+        // console.log(result);
+        res.json(result);
+      });*/
+      dbaa
+        .collection("supervisor")
+        .find(query)
+        .toArray(function (err, result) {
+          if (err) throw err;
+          if (result.length > 0) {
+            var findata = result[0];
+            var user_idtoken = query.emp_id;
+            var token = generateToken(query.emp_id);
+            var token_data = {
+              user_token: token,
+              user_name: user_idtoken,
+              user_id: result[0]._id,
+            };
+             result[0]["token"] = token;
+            // dbaa
+            //   .collection("userlogindetails")
+            //   .insert(token_data, function (err, result) {
+            //     if (err) throw err;
+            //     console.log("1 notification inserted");
+            //   });
+            //   query.isLoggedIn = true;
+            //   user.push(query);
+            res.json(result);
+          } else {
+            var failed = {
+              msg: "login failed",
+              status: "404",
+            };
+            res.json(failed);
+          }
+        });
+    }
+    console.log("End", user);
+    // next();
+  });
+
+  app.post("/api/userlogout", function (req, res) {
+    // console.log("Before Logout", req.body);
+    // if (user !== undefined && user.length > 0) {
+    //   user.splice(
+    //     user.findIndex(function (i) {
+    //       return i.emp_id === req.body.emp_id;
+    //     }),
+    //     1
+    //   );
+    // }
+    //
+    // var query = {
+    //   user_name: req.body.emp_id,
+    // };
+    // dbaa.collection("userlogindetails").remove(query, function (err, result) {
+    //   if (err) throw err;
+    //   console.log("1 notification inserted");
+      res.json({
+        status: "200",
+        msg: "logout Successfully",
+      });
+    // });
+    // console.log("After Logout", user);
+  });
+
+  app.post("/api/userdetails", function (req, res) {
+    console.log(req.body);
+    var query = {
+      supervisor_id: ObjectID(req.body.supervisor_id),
+    };
+    dbaa
+      .collection("user")
+      .find(query)
+      .toArray(function (err, result) {
+        if (err) throw err;
+        // console.log(result);
+
+        res.json(result);
+      });
+
+    /*dbaa.collection("supervisor").findOne({'_id':ObjectID(req.body['supervisor_id'])}, function (err, supervisorObj) {
+		if (err) throw err;
+		console.log('supervisorObj  ',supervisorObj);
+		if(supervisorObj && supervisorObj.hasOwnProperty('worker_list')){
+			var query = [];
+			if(typeof(supervisorObj['worker_list']) == 'object' && supervisorObj['worker_list'].length >0) {
+				supervisorObj['worker_list'].forEach(function(e){
+					query.push(ObjectID(e));
+				});
+			} else if(typeof(supervisorObj['worker_list']) == 'string'){
+				query.push(ObjectID(supervisorObj['worker_list']));
+			}
+			dbaa.collection("user").find({_id:{$in:query}}).toArray(function (er, results) {
+				if (er) throw er;
+				// console.log(result);
+				res.json(results);
+			});
+		} else {
+			res.json({ok:0});
+		}
+    });*/
+  });
+
+  //start notification code
+  app.post("/api/userdetails", function (req, res) {
+    console.log(req.body);
+    var query = {
+      supervisor_id: ObjectID(req.body.supervisor_id),
+    };
+    dbaa
+      .collection("user")
+      .find(query)
+      .toArray(function (err, result) {
+        if (err) throw err;
+        // console.log(result);
+
+        res.json(result);
+      });
+  });
+
+  app.post("/api/mobilelogin", function (req, res) {
+    var login = {
+      emp_id: req.body.emp_id,
+      password: req.body.password,
+    };
+
+    dbaa
+      .collection("supervisor")
+      .find(login)
+      .toArray(function (err, result) {
+        if (err) throw err;
+
+        if (result.length > 0) {
+          var findata = result[0];
+          var supervisor_idtoken = findata._id.toLocaleString();
+          console.log(findata._id);
+          var pickdate = new Date()
+            .toLocaleString("en-US", {
+              timeZone: "Asia/Kuala_Lumpur",
+            })
+            .split(",")[0]
+            .split("/");
+          var picktime = new Date()
+            .toLocaleString("en-US", {
+              timeZone: "Asia/Kuala_Lumpur",
+            })
+            .split(",")[1];
+          var token_data = {
+            deviceToken: req.body.deviceToken,
+            supervisor_id: supervisor_idtoken,
+            date_time: pickdate + "," + picktime,
+            deviceID: req.body.deviceID,
+          };
+
+          dbaa.collection("usertokkendetails").remove(
+            {
+              deviceID: req.body.deviceID,
+            },
+            function (err, result) {
+              if (err) throw err;
+              // console.log("remove detaisl",result);
+              dbaa
+                .collection("usertokkendetails")
+                .insert(token_data, function (err, result) {
+                  if (err) throw err;
+                  console.log("1 notification inserted");
                   var response = {
                     supervisorData: {
                       full_name: findata.f_name + " " + findata.l_name,
@@ -215,38 +348,48 @@ module.exports = function (app) {
       .collection("notificationdetail")
       .insert(req.body, function (err, result) {
         if (err) throw err;
-        // console.log("1 document inserted");
+        console.log("1 document inserted");
         res.json(result);
       });
   });
   //supervisor detail
   app.post("/api/supervisordetails", function (req, res) {
     var query = {
-      _id: ObjectID(req.body.supervisor_id),
+      _id: req.body.supervisor_id,
     };
-    // console.log(query);
-    dbaa
-      .collection("supervisor")
-      .find(query)
-      .toArray(function (err, result) {
-        if (err) throw err;
-        // console.log(result);
 
-        res.json(result);
-      });
+    // dbaa.collection("supervisor").find(query).toArray(function (err, result) {
+    //   if (err) throw err;
+    //   console.log(result);
+    //
+    //   res.json(result);
+    // });
+    console.log(req, "reqtest");
+    dbaa.collection("supervisor").findOne(
+      {
+        _id: req.body.supervisor_id,
+      },
+      function (err, result) {
+        if (err) throw err;
+        console.log(result, "resulttest");
+        if (result) {
+          res.json(result);
+        }
+      }
+    );
   });
 
   app.post("/api/userrdetailsglass", function (req, res) {
     var query = {
       _id: ObjectID(req.body.user_id),
     };
-    // console.log(query);
+    console.log(query);
     dbaa
       .collection("user")
       .find(query)
       .toArray(function (err, result) {
         if (err) throw err;
-        // console.log(result);
+        console.log(result);
 
         res.json(result);
       });
@@ -259,7 +402,14 @@ module.exports = function (app) {
 
     dbaa.collection("usertokkendetails").remove(query, function (err, result) {
       if (err) throw err;
-      // console.log("1 notification inserted");
+      console.log("1 notification inserted");
+      if (
+        req.session.user.find(function (a) {
+          return a.emp_id === query.emp_id;
+        })
+      )
+        return;
+      req.session.user = undefined;
       res.json({
         status: "200",
         msg: "logout Successfully",
@@ -273,14 +423,14 @@ module.exports = function (app) {
       .find(req.body)
       .toArray(function (err, result) {
         if (err) throw err;
-        // // console.log(result);
+        // console.log(result);
 
         res.json(result);
       });
   });
 
   app.post("/api/readallnotification", function (req, res) {
-    // console.log(req.body.supervisor_id)
+    console.log(req.body.supervisor_id);
     dbaa.collection("notificationdetail").update(
       {
         supervisor_id: req.body.supervisor_id,
@@ -301,9 +451,9 @@ module.exports = function (app) {
   });
 
   app.post("/api/listNotification", function (req, res) {
-    // console.log('as', {
-    //   "supervisor_id": req.body.supervisor_id
-    // });
+    console.log("as", {
+      supervisor_id: req.body.supervisor_id,
+    });
 
     dbaa
       .collection("notificationdetail")
@@ -337,7 +487,7 @@ module.exports = function (app) {
   app.post("/api/inserdocdata", function (req, res) {
     dbaa.collection("alldocuments").insert(req.body, function (err, result) {
       if (err) throw err;
-      // console.log("1 document inserted");
+      console.log("1 document inserted");
       res.json(result);
     });
   });
@@ -349,7 +499,7 @@ module.exports = function (app) {
 
     dbaa.collection("alldocuments").remove(querydlt, function (err, result) {
       if (err) throw err;
-      // console.log("1 document deleted");
+      console.log("1 document deleted");
       res.json(result);
     });
 
@@ -371,7 +521,7 @@ module.exports = function (app) {
   });
 
   app.post("/api/showdatadoc", function (req, res) {
-    // console.log(req.body)
+    console.log(req.body);
 
     var query = req.body;
 
@@ -380,14 +530,14 @@ module.exports = function (app) {
       .find(query)
       .toArray(function (err, result) {
         if (err) throw err;
-        // // console.log(result);
+        // console.log(result);
 
         res.json(result);
       });
   });
 
   app.post("/api/callhistorydata", function (req, res) {
-    // console.log(req.body)
+    console.log(req.body);
     var query = {
       user_id: ObjectID(req.body.user_id),
     };
@@ -396,7 +546,7 @@ module.exports = function (app) {
       .find(req.body)
       .toArray(function (err, result) {
         if (err) throw err;
-        // // console.log(result);
+        // console.log(result);
 
         res.json(result);
       });
@@ -404,7 +554,7 @@ module.exports = function (app) {
 
   app.post("/api/reportcallhistory", function (req, res) {
     var datsend = {};
-    // console.log(req.body)
+    console.log(req.body);
     var query = {
       user_id: req.body.user_id,
     };
@@ -422,41 +572,41 @@ module.exports = function (app) {
       .find(datsend)
       .toArray(function (err, result) {
         if (err) throw err;
-        // // console.log(result);
+        // console.log(result);
 
         res.json(result);
       });
   });
 
   app.post("/api/calldetailsave", function (req, res) {
-    // console.log(req.body)
+    console.log(req.body);
 
     dbaa.collection("callhistory").insert(req.body, function (err, result) {
       if (err) throw err;
-      // console.log("1 call inserted");
+      console.log("1 call inserted");
       res.json(result);
     });
   });
 
   app.post("/api/viewevidence", function (req, res) {
-    // console.log(req.body)
+    console.log(req.body);
 
     dbaa
       .collection("evidence")
       .find(req.body)
       .toArray(function (err, result) {
         if (err) throw err;
-        // console.log("evidence call");
+        console.log("evidence call");
         res.json(result);
       });
   });
 
   app.post("/api/cehavidenceinsert", function (req, res) {
-    // console.log(req.body)
+    console.log(req.body);
 
     dbaa.collection("evidence").insert(req.body, function (err, result) {
       if (err) throw err;
-      // console.log("evidence inserted");
+      console.log("evidence inserted");
       res.json(result);
     });
   });
@@ -466,7 +616,7 @@ module.exports = function (app) {
       .collection("glasswisedoclist")
       .insert(req.body, function (err, result) {
         if (err) throw err;
-        // console.log("glasscalldoc");
+        console.log("glasscalldoc");
         res.json(result);
       });
   });
@@ -479,7 +629,7 @@ module.exports = function (app) {
 
     dbaa.collection("traingevidence").insert(evd, function (err, result) {
       if (err) throw err;
-      // console.log("traingevidence");
+      console.log("traingevidence");
 
       res.json({
         meta: {
@@ -515,7 +665,7 @@ module.exports = function (app) {
         },
       ])
       .toArray(function (err, result) {
-        // console.log(result)
+        console.log(result);
         if (result[0]) {
           var metad = {
             doclist: result[0].doclist,
@@ -541,10 +691,10 @@ module.exports = function (app) {
   });
 
   app.post("/api/login", function (req, res) {
-    // console.log(req.body)
+    console.log(req.body);
 
     var datadsds = {
-      qr_code: req.body.qr_code,
+      glass_id: req.body.qr_code,
     };
 
     dbaa
@@ -570,7 +720,7 @@ module.exports = function (app) {
               user_id: "",
             },
           };
-          // console.log("bug", result);
+          console.log("bug", result);
           if (
             result.supervisor_id !== null &&
             result.supervisor_id !== undefined &&
@@ -668,7 +818,7 @@ module.exports = function (app) {
               },
               function (err, r) {
                 if (err) throw err;
-                // console.log(r);
+                console.log(r);
                 updateWorkersList(r.ops[0]._id, query.worker_list).then(() => {
                   res.json(r.ops[0]);
                 });
@@ -684,7 +834,7 @@ module.exports = function (app) {
   //	ADD WORKER API
   app.post("/user/worker", function (req, res) {
     let query = req.body;
-    // console.log(query);
+    console.log(query);
     if (query.access_role == "admin") {
       dbaa.collection("user").findOne(
         {
@@ -801,9 +951,9 @@ module.exports = function (app) {
   //	UPDATE WORKER API
   app.put("/user/worker", function (req, res) {
     let query = req.body;
-    // console.log(query);
+    console.log(query);
     let o_id = ObjectID(query.id);
-    //    // console.log(query);
+    //    console.log(query);
     dbaa.collection("user").findOne(
       {
         _id: o_id,
@@ -811,7 +961,7 @@ module.exports = function (app) {
       function (err, result) {
         if (err) throw err;
         if (result.supervisor_id !== null && result.supervisor_id !== "") {
-          // console.log(result);
+          console.log(result);
           dbaa.collection("supervisor").findOneAndUpdate(
             {
               _id: ObjectID(result.supervisor_id),
@@ -1050,6 +1200,8 @@ module.exports = function (app) {
               _id: result[i]._id,
               emp_id: result[i].emp_id,
               supervisor_id: result[i].supervisor_id,
+              fname: result[i].f_name,
+              lname: result[i].l_name,
             });
           }
           res.json(newJson);
@@ -1071,8 +1223,13 @@ module.exports = function (app) {
       function (err, result) {
         if (err) throw err;
         if (result) {
-          // console.log("01 ", result);
-          // console.log("result ", result.value._id, "  ", result.value.worker_list);
+          console.log("01 ", result);
+          console.log(
+            "result ",
+            result.value._id,
+            "  ",
+            result.value.worker_list
+          );
           deleteWorkersList(result.value._id, result.value.worker_list).then(
             () => {
               //dbaa.collection("supervisor").findOneAndDelete({_id: ObjectID(param.user_id)});
@@ -1088,7 +1245,7 @@ module.exports = function (app) {
   //	DELETE THE WORKER
   app.delete("/delete/worker", function (req, res) {
     let param = req.query;
-    // console.log(param);
+    console.log(param);
     dbaa.collection("user").findOneAndDelete(
       {
         _id: ObjectID(param.user_id),
@@ -1156,13 +1313,13 @@ module.exports = function (app) {
         },
       ])
       .toArray(function (err, result) {
-        // console.log(result);
+        console.log(result);
         res.json(result);
       });
   });
 
   app.post("/api/viewtrainingevidence", function (req, res) {
-    // console.log(req.body);
+    console.log(req.body);
     dbaa
       .collection("traingevidence")
       .aggregate([
@@ -1179,7 +1336,7 @@ module.exports = function (app) {
         },
       ])
       .toArray(function (err, result) {
-        // console.log(result);
+        console.log(result);
         res.json(result);
       });
   });
@@ -1191,7 +1348,7 @@ module.exports = function (app) {
 
     dbaa.collection("callrecordings").insert(evd, function (err, result) {
       if (err) throw err;
-      // console.log("1 recording inserted");
+      console.log("1 recording inserted");
       res.json(result);
     });
   });
@@ -1233,13 +1390,13 @@ module.exports = function (app) {
         },
       ])
       .toArray(function (err, result) {
-        // console.log(result);
+        console.log(result);
         res.json(result);
       });
   });
 
   app.post("/api/viewrecordings", function (req, res) {
-    // console.log(req.body);
+    console.log(req.body);
     dbaa
       .collection("callrecordings")
       .aggregate([
@@ -1256,7 +1413,7 @@ module.exports = function (app) {
         },
       ])
       .toArray(function (err, result) {
-        // console.log(result);
+        console.log(result);
         res.json(result);
       });
   });
