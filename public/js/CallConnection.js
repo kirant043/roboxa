@@ -56,7 +56,10 @@ var sdpConstraints = {
 // could prompt for room name:
 // room = prompt('enter room name:');
 
-socket = io.connect(chatServerUrl);
+socket = io.connect(chatServerUrl, {
+  transports: ["websocket"],
+  upgrade: false,
+});
 
 socket.on("connect", function () {
   console.log(socket, chatServerUrl, "connected to socket.io");
@@ -290,9 +293,9 @@ function getUserMedia() {
           setTimeout(function () {
             localVideo.srcObject = whiteNoise();
             localStream = whiteNoise();
-            console.log("catch got user media")
+            console.log("catch got user media");
             sendMessage("got user media");
-            console.log("isInitiator", isInitiator)
+            console.log("isInitiator", isInitiator);
             if (isInitiator) {
               console.log("Adding local stream.");
               maybeStart();
@@ -326,9 +329,9 @@ function gotStream(stream) {
       .getTracks()
       .forEach((track) => localStream.addTrack(track, stream));
   }
-  console.log("gotStream got user media")
+  console.log("gotStream got user media");
   sendMessage("got user media");
-  console.log("isInitiator", isInitiator)
+  console.log("isInitiator", isInitiator);
   if (isInitiator) {
     console.log("Adding local stream.");
     maybeStart();
@@ -342,9 +345,9 @@ function gotStream2(stream) {
       .getTracks()
       .forEach((track) => localStream.addTrack(track, stream));
   }
-  console.log("gotStream2 got user media")
+  console.log("gotStream2 got user media");
   sendMessage("got user media");
-  console.log("isInitiator", isInitiator)
+  console.log("isInitiator", isInitiator);
   if (isInitiator) {
     console.log("Adding local stream.");
     maybeStart();
