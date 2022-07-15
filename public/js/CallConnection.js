@@ -56,8 +56,6 @@ var sdpConstraints = {
 // could prompt for room name:
 // room = prompt('enter room name:');
 
-socket = io.connect(chatServerUrl);
-
 socket.on("connect", function () {
   console.log(socket, chatServerUrl, "connected to socket.io");
   // var ResToSetUserId = {
