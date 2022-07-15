@@ -57,7 +57,7 @@ io.sockets.on("connection", function (socket) {
   //console.log("Successfully connected");
   // convenience function to log server messages on the client
   function log() {
-    console.log(arguments);
+    console.log(arguments[0]);
     var array = ["Message from server:"];
     array.push.apply(array, arguments);
     socket.emit("log", array);
