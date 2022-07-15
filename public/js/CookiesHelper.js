@@ -1,7 +1,4 @@
-﻿"use strict";
-var socket;
-var chatServerUrl = "https://nsbluescope.roboxatech.com:443";
-socket = io.connect(chatServerUrl);
+﻿var chatServerUrl = "https://nsbluescope.roboxatech.com:443";
 
 function setCookie(cname, cvalue, exdays) {
   var d = new Date();
