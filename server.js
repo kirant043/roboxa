@@ -13,7 +13,6 @@ var call_end_date_time = Date();
 var call_start_date_time = Date();
 var startDate = call_start_date_time.toString();
 var endDate = call_end_date_time.toString();
-let roomCreated = false;
  
 var morgan = require('morgan'); // log requests to the console (express4)
 var bodyParser = require('body-parser'); // pull information from HTML POST (express4)
@@ -451,10 +450,8 @@ io.sockets.on("connection", function (socket) {
     if (numClients === 0) {
       socket.join(room);
       log("Client ID " + socket.id + " created room " + room);
-      roomCreated = true;
-      log("roomCreated " + roomCreated);
       socket.emit("created", room, socket.id);
-    } else if (numClients === 1 && !roomCreated) {
+    } else if (numClients === 1) {
       log("Client ID " + socket.id + " joined room " + room);
       io.sockets.in(room).emit("join", room);
       socket.join(room);
