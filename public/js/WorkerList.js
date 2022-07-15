@@ -1059,7 +1059,7 @@ function getcallhistorydata() {
       setCallCounts(callhistoryglobal);
       FnGetReciveCalls();
       FnGetOutgoingCalls();
-      getcallhistorydata2();
+      // getcallhistorydata2();
     },
     error: function (xhr, status, error) {},
   });
