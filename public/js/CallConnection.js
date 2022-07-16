@@ -399,6 +399,7 @@ function createOrJoin(user_id, other_user_id) {
     console.log("Created room " + room);
     isInitiator = true;
     isChannelReady = true;
+    getUserMedia();
   });
 
   socket.on("full", function (room) {
@@ -409,19 +410,20 @@ function createOrJoin(user_id, other_user_id) {
     console.log("Another peer made a request to join room " + room);
     console.log("This peer is the initiator of room " + room + "!");
     isChannelReady = true;
+    getUserMedia();
   });
 
   socket.on("joined", function (room) {
     console.log("joined: " + room);
 
     isChannelReady = true;
+    getUserMedia();
   });
 
   socket.on("log", function (array) {
     console.log.apply(console, array);
   });
 
-  getUserMedia();
 }
 
 socket.on("message", function (message) {
