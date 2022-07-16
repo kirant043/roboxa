@@ -386,7 +386,7 @@ io.sockets.on("connection", function (socket) {
     console.log("leaveGroup");
     console.log(args);
     //log(args);
-    console.log(io.sockets.clients(args.room))
+    console.log(io.of('/').clients(args.room))
     io.sockets.clients(args.room).forEach(function(s){
       s.leave(args.room);
     });
