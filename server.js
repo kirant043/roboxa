@@ -387,8 +387,11 @@ io.sockets.on("connection", function (socket) {
     console.log(args);
     //log(args);
 
-    socket.in(args.room).emit("leaveGroup", args);
+    io.sockets.clients(args.room).forEach(function(s){
+      s.leave(args.room);
+    });
     socket.leave(args.room);
+    socket.in(args.room).emit("leaveGroup", args);
     //socket.broadcast.emit('leaveGroup', args);
   });
 
