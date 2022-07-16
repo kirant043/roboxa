@@ -398,6 +398,7 @@ function createOrJoin(user_id, other_user_id) {
   socket.on("created", function (room) {
     console.log("Created room " + room);
     isInitiator = true;
+    isChannelReady = true;
   });
 
   socket.on("full", function (room) {
@@ -578,7 +579,7 @@ function onCreateSessionDescriptionError(error) {
 }
 
 function handleRemoteStreamAdded(event) {
-  console.log("Remote stream added.");
+  console.log("Remote stream added.", event);
 
   remoteStream = event.streams[0];
 
