@@ -523,12 +523,12 @@ function createPeerConnection() {
   try {
     uniqcallid = "";
     pc = new RTCPeerConnection(serverconfig);
-    pc.onicecandidate = handleIceCandidate;
     pc.addEventListener('ontrack', async (event) => {
       console.log('Listening to ontrack event', event);
     });
     pc.onaddstream = handleRemoteStreamAdded;
     pc.onremovestream = handleRemoteStreamRemoved;
+    pc.onicecandidate = handleIceCandidate;
     console.log("Created RTCPeerConnnection");
     $("#allbuttonvideo").show();
 
