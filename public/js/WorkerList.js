@@ -182,7 +182,7 @@ socket.on("connect", function () {
   console.log("connected" + socket.id);
 });
 socket.on("disconnect", function () {
-  console.log("Socket disconnected")
+  console.log("Socket disconnected");
   logout();
 });
 function removefilesingle(id) {
@@ -220,7 +220,7 @@ function FnGetWorkerList() {
     success: function (data) {
       hideloader();
       showWorkerList(data);
-      console.log('emitting getonline users' , socket)
+      console.log("emitting getonline users", socket);
       socket.emit("GetOnlineUsers");
     },
     error: function (xhr, status, error) {
@@ -618,21 +618,24 @@ socket.on("callEnd", function (data) {
   localstaream = "";
   remoteStream = "";
   remoteVideo.srcObject = null;
-  localStream.getTracks().forEach(track => track.stop())
-  console.log("Localstream ended")
+  localStream.getTracks().forEach((track) => track.stop());
+  console.log("Localstream ended");
 });
 
 socket.on("connectUser", function (data) {
   // socket.emit('setUserId', ResToSetUserId);
   console.log(workerListIds, data);
   for (var i = 0; i < workerListIds.length; i++) {
+    var leaveRoom = {
+      room: workerListIds[i] + getCookie("user_id"),
+    };
+    socket.emit("leaveGroup", leaveRoom);
     if (workerListIds[i] == data.user_id) {
       $("#" + data.user_id).removeAttr("disabled");
       $("#span5" + data.user_id).text("Active");
     }
   }
 });
-
 
 socket.on("cehavidence", function (data) {
   var requestdsdds = JSON.stringify({
@@ -1722,7 +1725,7 @@ function getdateTimeformat(datestring) {
   if (ss < 10) {
     ss = "0" + ss;
   }
-  var today = dd + "/" + mm + "/" + yyyy + " " + hh + ":"+ m + ":"+ ss;
+  var today = dd + "/" + mm + "/" + yyyy + " " + hh + ":" + m + ":" + ss;
   return today;
 }
 
@@ -2307,13 +2310,13 @@ function changeActiveState(type) {
     $("#drawRectTool").attr("src", "images/rectange-line-active.png");
     $("#freeHandTool").attr("src", "images/free-hand.png");
     $("#drawCircleTool").attr("src", "images/circle-line.png");
-   // $("#drawLineTool").attr("src", "images/line.png");
+    // $("#drawLineTool").attr("src", "images/line.png");
   } else if (type == "circle") {
     //var src = ($('#drawCircleTool').attr('src') === "images/circle-line.png") ? "images/circle-line-active.png"	: "images/circle-line.png";
     $("#drawCircleTool").attr("src", "images/circle-line-active.png");
     $("#drawRectTool").attr("src", "images/rectange-line.png");
     $("#freeHandTool").attr("src", "images/free-hand.png");
-   // $("#drawLineTool").attr("src", "images/line.png");
+    // $("#drawLineTool").attr("src", "images/line.png");
   } /*else if (type == "line") {
     //var src = ($('#drawRectTool').attr('src') === "images/rectange-line.png") ? "images/rectange-line-active.png"	: "images/rectange-line.png";
     $("#drawLineTool").attr("src", "images/line-active.png");
