@@ -391,6 +391,7 @@ io.sockets.on("connection", function (socket) {
     //   s.leave(args.room);
     // });
     var allsockets = io.in(args.room)
+    console.log("allsockets", allsockets)
     Object.keys(allsockets.sockets).forEach((item) => {
       console.log("TODO: Item:", sockets.sockets[item].id)            
     })
