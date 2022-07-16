@@ -581,7 +581,11 @@ function onCreateSessionDescriptionError(error) {
 function handleRemoteStreamAdded(event) {
   console.log("Remote stream added.", event);
 
-  remoteStream = event.streams[0] || event.stream;
+  if(event.streams && event.streams.length) {
+    remoteStream = event.streams[0]
+  } else if(event.stream) {
+    remoteStream = event.stream;
+  }
 
   // window.stream used for recording call
   window.stream = remoteStream;
