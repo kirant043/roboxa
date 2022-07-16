@@ -466,11 +466,6 @@ function rejectcall(uid) {
   };
 
   socket.emit("rejectcall", userdata);
-  var leaveRoom = {
-    room: uid + getCookie("user_id"),
-  };
-
-  socket.emit("leaveGroup", leaveRoom);
 }
 
 function callrcvweb() {
