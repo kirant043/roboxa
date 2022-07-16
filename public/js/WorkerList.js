@@ -618,6 +618,8 @@ socket.on("callEnd", function (data) {
   localstaream = "";
   remoteStream = "";
   remoteVideo.srcObject = null;
+  localStream.getTracks().forEach(track => track.stop())
+  console.log("Localstream ended")
 });
 
 socket.on("connectUser", function (data) {
@@ -631,13 +633,6 @@ socket.on("connectUser", function (data) {
   }
 });
 
-socket.on("leaveRoom", function (data) {
-  localStream.getTracks().forEach(track => track.stop())
-  localstaream = "";
-  remoteStream = "";
-  remoteVideo.srcObject = null;
-  console.log("Localstream ended")
-});
 
 socket.on("cehavidence", function (data) {
   var requestdsdds = JSON.stringify({
