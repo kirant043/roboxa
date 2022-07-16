@@ -395,6 +395,15 @@ io.sockets.on("connection", function (socket) {
       console.log("Leaving Room ID:--- ", allsockets.sockets[item].id)   
       allsockets.sockets[item].leave(args.room)         
     })
+    io.of('/').in(args.room).clients(function(error, clients) {
+        if (clients.length > 0) {
+            console.log('clients in the room: \n');
+            console.log(clients);
+            clients.forEach(function (socket_id) {
+                io.sockets.sockets[socket_id].leave('room name');
+            });
+        }
+    });
     socket.leave(args.room);
     socket.in(args.room).emit("leaveGroup", args);
     //socket.broadcast.emit('leaveGroup', args);
