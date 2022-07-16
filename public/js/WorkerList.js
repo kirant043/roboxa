@@ -626,10 +626,6 @@ socket.on("connectUser", function (data) {
   // socket.emit('setUserId', ResToSetUserId);
   console.log(workerListIds, data);
   for (var i = 0; i < workerListIds.length; i++) {
-    var leaveRoom = {
-      room: workerListIds[i] + getCookie("user_id"),
-    };
-    socket.emit("leaveGroup", leaveRoom);
     if (workerListIds[i] == data.user_id) {
       $("#" + data.user_id).removeAttr("disabled");
       $("#span5" + data.user_id).text("Active");
@@ -675,6 +671,11 @@ socket.on("userDisconnect", function (data) {
 });
 
 socket.on("GetOnlineUsers", function (data) {
+  // var leaveRoom = {
+  //   room: workerListIds[i] + getCookie("user_id"),
+  // };
+  // socket.emit("leaveGroup", leaveRoom);
+  console.log(data, workerListIds)
   for (var i = 0; i < workerListIds.length; i++) {
     if (data.user_id.indexOf(workerListIds[i]) !== -1) {
       $("#" + workerListIds[i]).removeAttr("disabled");
