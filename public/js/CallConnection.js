@@ -526,6 +526,12 @@ function createPeerConnection() {
     pc.addEventListener('ontrack', async (event) => {
       console.log('Listening to ontrack event', event);
     });
+    pc.addEventListener('onaddtrack', async (event) => {
+      console.log('Listening to onaddtrack event', event);
+    });
+    pc.addEventListener('track', async (event) => {
+      console.log('Listening to track event', event);
+    });
     pc.onaddstream = handleRemoteStreamAdded;
     pc.onremovestream = handleRemoteStreamRemoved;
     pc.onicecandidate = handleIceCandidate;
