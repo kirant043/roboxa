@@ -386,10 +386,14 @@ io.sockets.on("connection", function (socket) {
     console.log("leaveGroup");
     console.log(args);
     //log(args);
-    console.log(io.of('/').clients(args.room))
-    io.sockets.clients(args.room).forEach(function(s){
-      s.leave(args.room);
-    });
+    // console.log(io.sockets.clients(args.room))
+    // io.sockets.clients(args.room).forEach(function(s){
+    //   s.leave(args.room);
+    // });
+    var allsockets = io.in(args.room)
+    Object.keys(allsockets.sockets).forEach((item) => {
+      console.log("TODO: Item:", sockets.sockets[item].id)            
+    })
     socket.leave(args.room);
     socket.in(args.room).emit("leaveGroup", args);
     //socket.broadcast.emit('leaveGroup', args);
