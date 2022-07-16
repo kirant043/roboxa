@@ -391,9 +391,9 @@ io.sockets.on("connection", function (socket) {
     //   s.leave(args.room);
     // });
     var allsockets = io.in(args.room)
-    console.log("allsockets", allsockets)
     Object.keys(allsockets.sockets).forEach((item) => {
-      console.log("TODO: Item:", sockets.sockets[item].id)            
+      console.log("Leaving Room ID:--- ", allsockets.sockets[item].id)   
+      allsockets.sockets[item].leave(args.room)         
     })
     socket.leave(args.room);
     socket.in(args.room).emit("leaveGroup", args);
