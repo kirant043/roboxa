@@ -44,7 +44,9 @@ app.set('host', process.env.HOST || 'https://iium-ilmutech.com');
 // });
 
 // Create an HTTPS service identical to the HTTP service.
-const server = https.createServer(options, app).listen(443);
+const server = https.createServer(options, app).listen(443, function(){
+  console.log('Express server listening on port 443');
+});
 const io = require('socket.io')(server);
 
 ("use strict");
