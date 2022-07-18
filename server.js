@@ -6,6 +6,7 @@ var https = require('https');
 var http = require('http');
 var request = require("request");
 var FCM = require("fcm-node");
+const io = require('socket.io')(443);
 var globalapiurl = "https://iium-ilmutech.com";
 var clients = {};
 var offlineuser = [];
@@ -39,13 +40,12 @@ require('./app/routes.js')(app);
 app.set('port', process.env.PORT || 80); //4063
 app.set('host', process.env.HOST || 'https://iium-ilmutech.com');
 
-// http.createServer(app).listen(80, function(){
-//   console.log('Express server listening on port 80');
-// });
+http.createServer(app).listen(80, function(){
+  console.log('Express server listening on port 80');
+});
 
 // Create an HTTPS service identical to the HTTP service.
-const server = https.createServer(options, app).listen(443);
-const io = require('socket.io')(server);
+https.createServer(options, app).listen(443);
 
 ("use strict");
 
