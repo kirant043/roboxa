@@ -114,8 +114,8 @@ var scotchTodo = angular.module("scotchTodo", []);
     if (file) {
       console.log("file upload - preparing");
       AWS.config.update({
-        accessKeyId: "AKIAJEKFDQWHJ5E6XV4A",
-        secretAccessKey: "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",
+        accessKeyId: "AKIAR3PBMXTGIYBUXYG6",
+        secretAccessKey: "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",
         region: "us-east-1",
       });
       var s3 = new AWS.S3();
