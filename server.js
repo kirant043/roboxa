@@ -6,7 +6,7 @@ const http = require('http');
 var request = require("request");
 var FCM = require("fcm-node");
 const io = require('socket.io')(3058);
-var globalapiurl = "https://nsbluescope.roboxatech.com";
+var globalapiurl = "https://iium-ilmutech.com";
 var clients = {};
 var offlineuser = [];
 var call_end_date_time = Date();
@@ -37,7 +37,7 @@ app.use(methodOverride());
 
 require('./app/routes.js')(app);
 app.set('port', process.env.PORT || 80); //4063
-app.set('host', process.env.HOST || 'https://nsbluescope.roboxatech.com');
+app.set('host', process.env.HOST || 'https://iium-ilmutech.com');
 
 http.createServer(app).listen(4028, function(){
   console.log('Express server listening on port ' + app.get('host') + ':' + app.get('port'));
@@ -486,7 +486,7 @@ io.sockets.on("connection", function (socket) {
     var ifaces = os.networkInterfaces();
     for (var dev in ifaces) {
       ifaces[dev].forEach(function (details) {
-        if (details.family === "IPv4" && details.address !== "nsbluescope.roboxatech.com") {
+        if (details.family === "IPv4" && details.address !== "iium-ilmutech.com") {
           socket.emit("ipaddr", details.address);
         }
       });

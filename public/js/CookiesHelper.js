@@ -1,4 +1,4 @@
-﻿var chatServerUrl = "https://nsbluescope.roboxatech.com:443";
+﻿var chatServerUrl = "https://iium-ilmutech.com:443";
 
 function setCookie(cname, cvalue, exdays) {
   var d = new Date();
