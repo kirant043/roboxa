@@ -20,8 +20,8 @@ var bodyParser = require('body-parser'); // pull information from HTML POST (exp
 var methodOverride = require('method-override'); // simulate DELETE and PUT (express4)
 
 var options = {
-	key: fs.readFileSync('server.key'),
-	cert: fs.readFileSync('server.pem'),
+	key: fs.readFileSync('/etc/letsencrypt/live/iium-ilmutech.com/privkey.pem'),
+	cert: fs.readFileSync('/etc/letsencrypt/live/iium-ilmutech.com/fullchain.pem'),
 };
 app.use(express.static(__dirname + '/public')); // set the static files location /public/img will be /img for users
 app.use(morgan('dev')); // log every request to the console
