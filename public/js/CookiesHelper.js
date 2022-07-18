@@ -1,4 +1,4 @@
-﻿var chatServerUrl = "3.129.149.152:3058";
+﻿var chatServerUrl = "https://iium-ilmutech.com:443";
 
 function setCookie(cname, cvalue, exdays) {
   var d = new Date();
