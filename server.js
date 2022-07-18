@@ -2,10 +2,11 @@
 var express = require('express');
 var app = express(); // create our app w/ express
 const fs = require('fs');
-const http = require('http');
+var https = require('https');
+var http = require('http');
 var request = require("request");
 var FCM = require("fcm-node");
-const io = require('socket.io')(3058);
+const io = require('socket.io')(443);
 var globalapiurl = "https://iium-ilmutech.com";
 var clients = {};
 var offlineuser = [];
@@ -20,7 +21,7 @@ var methodOverride = require('method-override'); // simulate DELETE and PUT (exp
 
 var options = {
 	key: fs.readFileSync('server.key'),
-	cert: fs.readFileSync('server.cert'),
+	cert: fs.readFileSync('server.crt'),
 };
 app.use(express.static(__dirname + '/public')); // set the static files location /public/img will be /img for users
 app.use(morgan('dev')); // log every request to the console
@@ -39,9 +40,12 @@ require('./app/routes.js')(app);
 app.set('port', process.env.PORT || 80); //4063
 app.set('host', process.env.HOST || 'https://iium-ilmutech.com');
 
-http.createServer(app).listen(4028, function(){
-  console.log('Express server listening on port 4028');
+http.createServer(app).listen(80, function(){
+  console.log('Express server listening on port 80');
 });
+
+// Create an HTTPS service identical to the HTTP service.
+https.createServer(options, app).listen(443);
 
 ("use strict");
 
