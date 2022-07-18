@@ -1654,6 +1654,16 @@ function senddoctoglasssocket() {
     beforeSend: function () {},
     success: function (data) {
       isShredoc = 1;
+      var requestdsdds = {
+        url: data["ops"][0]["doclist"][0]["url"],
+        user_id: getCookie("user_id"),
+        other_user_id: calleridfordocsave,
+        callid: uniqcallid,
+        doctype: "image",
+        from: "websupport",
+      };
+  
+      socket.emit("canvsdata", requestdsdds);
     },
     error: function (xhr, status, error) {
       // alert(error); alert(status); alert(xhr);
