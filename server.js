@@ -39,9 +39,9 @@ require('./app/routes.js')(app);
 app.set('port', process.env.PORT || 80); //4063
 app.set('host', process.env.HOST || 'https://iium-ilmutech.com');
 
-http.createServer(app).listen(80, function(){
-  console.log('Express server listening on port 80');
-});
+// http.createServer(app).listen(80, function(){
+//   console.log('Express server listening on port 80');
+// });
 
 // Create an HTTPS service identical to the HTTP service.
 const server = https.createServer(options, app).listen(443);
