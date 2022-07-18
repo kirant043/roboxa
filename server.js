@@ -36,11 +36,9 @@ app.use(bodyParser.json({
 app.use(methodOverride());
 
 require('./app/routes.js')(app);
-app.set('port', process.env.PORT || 80); //4063
-app.set('host', process.env.HOST || 'https://iium-ilmutech.com');
 
 http.createServer(app).listen(4028, function(){
-  console.log('Express server listening on port ' + app.get('host') + ':' + app.get('port'));
+  console.log('Express server listening on port 4028');
 });
 
 ("use strict");
