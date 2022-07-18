@@ -511,7 +511,7 @@ display:none;
 	display: flex;
     flex-wrap: nowrap;
     justify-content: space-between;
-    max-width: 600px;
+    max-width: 750px;
     margin: 20px auto;
 }
 .footer-logos img {
