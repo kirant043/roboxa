@@ -6,7 +6,6 @@ var https = require('https');
 var http = require('http');
 var request = require("request");
 var FCM = require("fcm-node");
-const io = require('socket.io')(443);
 var globalapiurl = "https://iium-ilmutech.com";
 var clients = {};
 var offlineuser = [];
@@ -45,7 +44,8 @@ http.createServer(app).listen(80, function(){
 });
 
 // Create an HTTPS service identical to the HTTP service.
-https.createServer(options, app).listen(443);
+const server = https.createServer(options, app).listen(443);
+const io = require('socket.io')(server);
 
 ("use strict");
 
