@@ -615,10 +615,13 @@ socket.on("callEnd", function (data) {
 
   localStream.getAudioTracks()[0].stop();
   localStream.getVideoTracks()[0].stop();
+  localStream.getTracks().forEach((track) => track.stop());
+  localVideo.srcObject = null;
+  localVideo.mozSrcObject=null;
+  remoteVideo.mozSrcObject=null;
+  remoteVideo.srcObject = null;
   localstaream = "";
   remoteStream = "";
-  remoteVideo.srcObject = null;
-  localStream.getTracks().forEach((track) => track.stop());
   console.log("Localstream ended");
 });
 
