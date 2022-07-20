@@ -805,7 +805,6 @@ button.close:focus {
 /*Login Css*/
 
 .login-container-bg {
-  background: #173b52;
   display: block;
   width: 100%;
   padding: 0;
@@ -816,7 +815,7 @@ button.close:focus {
 }
 .Login-hdr {
   text-align: center;
-  color: #fff;
+  color: #000;
   font-size: 24px;
   margin-bottom: 20px;
 }
