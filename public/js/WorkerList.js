@@ -622,8 +622,18 @@ socket.on("callEnd", function (data) {
   remoteVideo.srcObject = null;
   localstaream = "";
   remoteStream = "";
+  stopCamera("localVideo");
+  stopCamera("remoteVideo");
   console.log("Localstream ended");
 });
+function stopCamera(key) {
+  const video = document.querySelector("#"+key);
+
+  for (const track of video.srcObject.getTracks()) {
+    track.stop();
+  }
+  video.srcObject = null;
+}
 
 socket.on("connectUser", function (data) {
   // socket.emit('setUserId', ResToSetUserId);
