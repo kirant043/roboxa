@@ -1654,27 +1654,15 @@ function senddoctoglasssocket() {
     beforeSend: function () {},
     success: function (data) {
       isShredoc = 1;
-      var requestdsdds = {
-        url: data["ops"][0]["doclist"][0]["url"],
-        user_id: getCookie("user_id"),
-        other_user_id: calleridfordocsave,
-        callid: uniqcallid,
-        doctype: "image",
-        from: "websupport",
-      };
+      socket.emit("sharedDoc", objsenddoc);
   
-      socket.emit("canvsdata", requestdsdds);
+      if ($(this).attr("checked")) $("input:checkbox").attr("checked", "checked");
+      else $("input:checkbox").removeAttr("checked");
     },
     error: function (xhr, status, error) {
       // alert(error); alert(status); alert(xhr);
     },
   });
-  setTimeout(function () {
-    socket.emit("sharedDoc", objsenddoc);
-
-    if ($(this).attr("checked")) $("input:checkbox").attr("checked", "checked");
-    else $("input:checkbox").removeAttr("checked");
-  }, 300);
 }
 
 function get_time_diff(first, second) {

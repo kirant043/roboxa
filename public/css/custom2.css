@@ -25,7 +25,7 @@ border: 0;
 }
 .nav-top-con{height: 65px; background-color: #173b52; padding: 10px 20px;
 position:fixed; width: 100%; z-index: 1;}
-.navbar-brand{width: 120px; height:45px; background: url(../images/uuim-logo.png) center center no-repeat; text-indent: -9999px;
+.navbar-brand{width: 120px; height:45px; background: url(../images/IIUM.png) center center no-repeat; text-indent: -9999px;
 position: relative; background-size: 100%; margin-right: 20px;}
 .navbar-brand-txt{color:#ffffff; text-indent: 0px; width: 100px; height: 35px;line-height: 40px;
 font-size:21px;}
