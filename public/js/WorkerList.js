@@ -394,9 +394,9 @@ socket.on("call", function (data) {
       user_id: data.user_id,
     };
     getAllnotification();
-    var missedcalltext = data.name + " is looking for your help ";
-    $("#busyincomingcalll").text(missedcalltext);
-    busyincomingcalll.style.display = "block";
+    // var missedcalltext = data.name + " is looking for your help ";
+    // $("#busyincomingcalll").text(missedcalltext);
+    // busyincomingcalll.style.display = "block";
 
     socket.emit("callerbusy", userdata);
   } else {
