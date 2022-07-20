@@ -922,7 +922,7 @@ button.close:focus {
   text-align: center;
   font-size: 18px;
   font-weight: 500;
-  color: #fff;
+  color: #fff !important;
   background: #173b53;
   display: inline-block;
   min-height: 56px;
