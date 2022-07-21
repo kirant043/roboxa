@@ -126,7 +126,7 @@ $(document).ready(function () {
       "video-screen": showScreen,
       "userId": getCookie("user_id")
     }
-    console.log("socketData", socketData)
+    socket.emit("flip", socketData);
     if (
       $(this).find("img").attr("src") ==
       "images/video-player-icons/ic_camera_flip_active.png"
