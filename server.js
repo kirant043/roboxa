@@ -381,11 +381,7 @@ io.sockets.on("connection", function (socket) {
 
   socket.on("flip", function (args) {
     console.log("flip", args);
-
-    //  console.log(args);
-    //log(args);
-
-    // socket.in(args.other_user_id).emit("callEnd", args);
+    socket.in(args.other_user_id).emit("flip", args);
   });
 
   socket.on("callEnd", function (args) {
