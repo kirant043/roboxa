@@ -124,7 +124,8 @@ $(document).ready(function () {
     }
     socketData = {
       "video-screen": showScreen,
-      "userId": getCookie("user_id")
+      "userId": getCookie("user_id"),
+      "other_user_id": calleridfordocsave
     }
     socket.emit("flip", socketData);
     if (
