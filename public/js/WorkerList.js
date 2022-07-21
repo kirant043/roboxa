@@ -122,7 +122,11 @@ $(document).ready(function () {
     if(isFlipActive) {
       showScreen = "expert"
     }
-    console.log("showScreen", showScreen)
+    socketData = {
+      "video-screen": showScreen,
+      "userId": getCookie("user_id")
+    }
+    console.log("socketData", socketData)
     if (
       $(this).find("img").attr("src") ==
       "images/video-player-icons/ic_camera_flip_active.png"
