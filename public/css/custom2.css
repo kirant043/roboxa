@@ -30,6 +30,7 @@ a:hover {
 }
 .nav-top-con {
   height: 65px;
+  background-color: #fff;
   padding: 10px 20px;
   position: fixed;
   width: 100%;
