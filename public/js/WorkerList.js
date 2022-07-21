@@ -1,6 +1,7 @@
 ﻿var rams = [];
 var ramsname = [];
 var calldata;
+var isFlipActive = false;
 $(document).ready(function () {
   document
     .getElementById("remoteVideo")
@@ -116,6 +117,12 @@ $(document).ready(function () {
     $("#localVideo").toggle();
     $("#remoteVideo").toggle();
     $("#vZoomScrollNav").toggle();
+    let showScreen = "technician";
+    isFlipActive = !isFlipActive;
+    if(isFlipActive) {
+      showScreen = "expert"
+    }
+    console.log("showScreen", showScreen)
     if (
       $(this).find("img").attr("src") ==
       "images/video-player-icons/ic_camera_flip_active.png"
@@ -295,6 +302,7 @@ function makeCall(value) {
     isShreevidence = "0";
     isShredoc = "0";
     isSharesupport = "0";
+    isFlipActive = false;
     var arr = value.name.split(",");
     $("#callLoader").empty();
     var str =
@@ -404,7 +412,7 @@ socket.on("call", function (data) {
     incomingcalltone.loop = true;
 
     incomingcalltone.play();
-
+    isFlipActive = false;
     callrcvdar = data;
 
     var request = JSON.stringify({
@@ -622,6 +630,7 @@ socket.on("callEnd", function (data) {
   remoteVideo.srcObject = null;
   localstaream = "";
   remoteStream = "";
+  isFlipActive = false;
   stopCamera("localVideo");
   stopCamera("remoteVideo");
   console.log("Localstream ended");
