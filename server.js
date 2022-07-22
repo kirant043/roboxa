@@ -110,7 +110,9 @@ io.sockets.on("connection", function (socket) {
 
     // socket.broadcast.emit("usergoofflineoncall", clients[socket.id]);
     /*delete clients[socket.id];*/
-    console.log(args)
+    console.log(args.client)
+    console.log(args.namespace)
+    console.log(args.disconnect)
     console.log('disconnected')
   });
 
