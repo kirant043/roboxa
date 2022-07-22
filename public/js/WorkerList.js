@@ -629,8 +629,8 @@ socket.on("callEnd", function (data) {
   localStream.getAudioTracks()[0].stop();
   localStream.getVideoTracks()[0].stop();
   localStream.getTracks().forEach((track) => track.stop());
-  localVideo.src = '';
-  remoteVideo.src = '';
+  localVideo.src = null;
+  remoteVideo.src = null;
   localstaream = "";
   remoteStream = "";
   isFlipActive = false;
