@@ -99,7 +99,7 @@ io.sockets.on("connection", function (socket) {
     let otherSocket = io.sockets.clients[id];
     ackFn(!!otherSocket && otherSocket.connected);
   });*/
-  socket.on("disconnect", function () {
+  socket.on("disconnect", function (args) {
     // offlineuser.push(clients[socket.id]);
     //console.log("user " + clients[socket.id] + " disconnected");
 
@@ -110,6 +110,7 @@ io.sockets.on("connection", function (socket) {
 
     // socket.broadcast.emit("usergoofflineoncall", clients[socket.id]);
     /*delete clients[socket.id];*/
+    console.log(args)
     console.log('disconnected')
   });
 
