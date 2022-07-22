@@ -855,7 +855,7 @@ function FnShowReciveCallDetail(data) {
         '<div class="img-1 datshareclass' +
         data[i].isShreevidence +
         '">' +
-        '<img src="images/call-ftr-img1.jpg" alt="">' +
+        '<img src="images/backdrop.jpg" alt="">' +
         '<div class="img-overlay">' +
         '<div class="zoom-icon">' +
         "<a OnClick=\"opensharedevidence('" +
@@ -874,7 +874,7 @@ function FnShowReciveCallDetail(data) {
         '<div class="img-1 datshareclass' +
         data[i].isSharesupport +
         '">' +
-        '<img src="images/call-ftr-img1.jpg" alt="">' +
+        '<img src="images/backdrop.jpg" alt="">' +
         '<div class="img-overlay">' +
         '<div class="zoom-icon">' +
         "<a OnClick=\"opensupooerevidence('" +
@@ -1010,7 +1010,7 @@ function FnShowOutgoingCallDetail(data) {
         '<div class="img-1 datshareclass' +
         data[i].isShreevidence +
         '">' +
-        '<img src="images/call-ftr-img1.jpg" alt="">' +
+        '<img src="images/backdrop.jpg" alt="">' +
         '<div class="img-overlay">' +
         '<div class="zoom-icon">' +
         "<a OnClick=\"opensharedevidence('" +
@@ -1029,7 +1029,7 @@ function FnShowOutgoingCallDetail(data) {
         '<div class="img-1 datshareclass' +
         data[i].isSharesupport +
         '">' +
-        '<img src="images/call-ftr-img1.jpg" alt="">' +
+        '<img src="images/backdrop.jpg" alt="">' +
         '<div class="img-overlay">' +
         '<div class="zoom-icon">' +
         "<a OnClick=\"opensupooerevidence('" +
@@ -2865,7 +2865,7 @@ function showEvidenceGallery(a, parent, data) {
       '<div class="img-1 datshareclass_' +
       i +
       '">' +
-      '<img src="images/call-ftr-img1.jpg" alt="">' +
+      '<img src="images/backdrop.jpg" alt="">' +
       '<div class="img-overlay" id="showGalleryImage_' +
       i +
       '" style="cursor:pointer;">' +
@@ -3109,7 +3109,7 @@ function showRecordingGallery(a, parent, data) {
       '<div class="img-1 datshareclass_' +
       i +
       '">' +
-      '<img src="images/call-ftr-img1.jpg" alt="">' +
+      '<img src="images/backdrop.jpg" alt="">' +
       '<div class="img-overlay" id="showCallRecording_' +
       i +
       '" style="cursor:pointer;">' +
