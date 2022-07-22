@@ -625,7 +625,15 @@ socket.on("callEnd", function (data) {
   var endDate = call_end_date_time.toString();
   FnSaveCallDetail(startDate, endDate, call_type, data);
   FnGetReciveCalls();
-
+  let tracks = window.localstream.getTracks();
+  tracks.forEach(function(track) {
+      if (track.kind === 'video') {
+          if (track.enabled) {
+              track.stop();
+              track.enabled = false; 
+          }
+      }
+  });
   stopCamera("localVideo");
   stopCamera("remoteVideo");
   localStream.getAudioTracks()[0].stop();
