@@ -641,8 +641,10 @@ socket.on("callEnd", function (data) {
   localStream.getTracks().forEach((track) => track.stop());
   localVideo.srcObject = null;
   localVideo.mozSrcObject=null;
+  localVideo.src = '';
   remoteVideo.mozSrcObject=null;
   remoteVideo.srcObject = null;
+  remoteVideo.src = '';
   localstaream = "";
   remoteStream = "";
   isFlipActive = false;
