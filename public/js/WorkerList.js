@@ -625,12 +625,24 @@ socket.on("callEnd", function (data) {
   var endDate = call_end_date_time.toString();
   FnSaveCallDetail(startDate, endDate, call_type, data);
   FnGetReciveCalls();
-  
+  let tracks = localStream.getTracks();
+  tracks.forEach(function(track) {
+      if (track.kind === 'video') {
+          if (track.enabled) {
+              track.stop();
+              track.enabled = false; 
+          }
+      }
+  });
+  stopCamera("localVideo");
+  stopCamera("remoteVideo");
   localStream.getAudioTracks()[0].stop();
   localStream.getVideoTracks()[0].stop();
   localStream.getTracks().forEach((track) => track.stop());
-  localVideo.src = null;
-  remoteVideo.src = null;
+  localVideo.srcObject = null;
+  localVideo.mozSrcObject=null;
+  remoteVideo.mozSrcObject=null;
+  remoteVideo.srcObject = null;
   localstaream = "";
   remoteStream = "";
   isFlipActive = false;
@@ -641,8 +653,10 @@ function stopCamera(key) {
   if(video && video.srcObject) {
     for (const track of video.srcObject.getTracks()) {
       track.stop();
+      track.enabled = false; 
     }
     video.srcObject = null;
+    video.src = '';
   }
 }
 
