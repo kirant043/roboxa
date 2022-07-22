@@ -626,6 +626,8 @@ socket.on("callEnd", function (data) {
   FnSaveCallDetail(startDate, endDate, call_type, data);
   FnGetReciveCalls();
 
+  stopCamera("localVideo");
+  stopCamera("remoteVideo");
   localStream.getAudioTracks()[0].stop();
   localStream.getVideoTracks()[0].stop();
   localStream.getTracks().forEach((track) => track.stop());
@@ -636,17 +638,16 @@ socket.on("callEnd", function (data) {
   localstaream = "";
   remoteStream = "";
   isFlipActive = false;
-  stopCamera("localVideo");
-  stopCamera("remoteVideo");
   console.log("Localstream ended");
 });
 function stopCamera(key) {
   const video = document.querySelector("#"+key);
-
-  for (const track of video.srcObject.getTracks()) {
-    track.stop();
+  if(video) {
+    for (const track of video.srcObject.getTracks()) {
+      track.stop();
+    }
+    video.srcObject = null;
   }
-  video.srcObject = null;
 }
 
 socket.on("connectUser", function (data) {
