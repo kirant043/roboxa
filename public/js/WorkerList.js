@@ -642,7 +642,7 @@ socket.on("callEnd", function (data) {
 });
 function stopCamera(key) {
   const video = document.querySelector("#"+key);
-  if(video) {
+  if(video && video.srcObject) {
     for (const track of video.srcObject.getTracks()) {
       track.stop();
     }
