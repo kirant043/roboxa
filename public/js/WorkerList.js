@@ -2120,7 +2120,7 @@ function logout() {
   var logoutdata = {
     user_id: getCookie("user_id"),
   };
-
+  socket.emit("userDisconnect", logoutdata)
   //localStorage.clear()
   // localStorage.setItem("loggeduserdata", "");
   // localStorage.setItem("roboxa_remember_me", "");
